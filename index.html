@@ -215,34 +215,35 @@ h1 {
 <body>
 <main class="page">
   <section class="cover">
-    <img class="logo" src="../../reports-shared/assets/logo-oat-white.png" alt="OAT Marketing" data-cfg-logo>
+    <img class="logo" src="logo-oat-white.png" alt="OAT Marketing">
 
     <div class="main">
       <div class="left">
         <p class="eyebrow">SEO Strategy Report</p>
         <h1>SEO<br>REPORT</h1>
         <div class="rule"></div>
-        <p class="client" data-cfg="client_name">DTF Printer USA</p>
-        <p class="date" data-cfg="report_date">May 2026</p>
+        <p class="client">DTF Printer USA</p>
+        <p class="date">May 2026</p>
       </div>
 
       <nav class="index-card" aria-label="Report contents">
         <h2 class="index-title">Report Contents</h2>
-        <ol class="index-list" id="rpt-toc"></ol>
+        <ol class="index-list">
+          <li><a href="roadmap.html"><span class="num">01</span><span>Roadmap</span></a></li>
+          <li><a href="gsc.html"><span class="num">02</span><span>GSC Performance</span></a></li>
+          <li><a href="ga4.html"><span class="num">03</span><span>GA4 Analytics</span></a></li>
+          <li><a href="aisearch.html"><span class="num">04</span><span>AI Search</span></a></li>
+          <li><a href="keywords.html"><span class="num">05</span><span>Keywords</span></a></li>
+          <li><a href="audit.html"><span class="num">06</span><span>Audit</span></a></li>
+          <li><a href="backlinks.html"><span class="num">07</span><span>Backlinks</span></a></li>
+          <li><a href="brightlocal.html"><span class="num">08</span><span>BrightLocal</span></a></li>
+          <li><a href="bing.html"><span class="num">09</span><span>Bing</span></a></li>
+          <li><a href="competitors.html"><span class="num">10</span><span>Competitors</span></a></li>
+          <li><a href="shopify.html"><span class="num">11</span><span>Shopify Analytics</span></a></li>
+        </ol>
       </nav>
     </div>
   </section>
 </main>
-<script src="../../reports-shared/components/_pages.js"></script>
-<script src="../../reports-shared/assets/config-loader.js"></script>
-<script>
-window.REPORT_CONFIG_READY.then(function(cfg){
-  if(cfg.logo)document.querySelectorAll('[data-cfg-logo]').forEach(function(el){el.src=cfg.logo;});
-  document.querySelectorAll('[data-cfg]').forEach(function(el){var key=el.dataset.cfg;if(cfg[key])el.textContent=cfg[key];});
-  if(cfg.primary_color)document.documentElement.style.setProperty('--orange',cfg.primary_color);
-});
-var toc=document.getElementById('rpt-toc');
-toc.innerHTML=(window.REPORT_PAGES||[]).filter(function(p){return p.id!=='index';}).map(function(p){return '<li><a href="'+p.href+'"><span class="num">'+p.num+'</span><span>'+p.label+'</span></a></li>';}).join('');
-</script>
 </body>
 </html>
