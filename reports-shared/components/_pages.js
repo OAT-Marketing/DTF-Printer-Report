@@ -10,5 +10,6 @@ window.REPORT_PAGES = [
   { id: 'backlinks',   num: '07', label: 'Backlinks',     href: 'backlinks.html',   accent: '#274b6e' },
   { id: 'brightlocal', num: '08', label: 'BrightLocal',   href: 'brightlocal.html', accent: '#F28C28' },
   { id: 'bing',        num: '09', label: 'Bing',          href: 'bing.html',        accent: '#0078d4' },
-  { id: 'shopify',     num: '10', label: 'Shopify',       href: 'shopify.html',     accent: '#5E8E3E' }
+  { id: 'competitors', num: '10', label: 'Competitors',   href: 'competitors.html', accent: '#E94B3C' },
+  { id: 'shopify',     num: '11', label: 'Shopify',       href: 'shopify.html',     accent: '#5E8E3E' }
 ];
