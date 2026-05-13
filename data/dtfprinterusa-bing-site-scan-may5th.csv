@@ -1,0 +1,7 @@
+﻿"Issue","Type","Pages affected"
+"Meta Description tag missing ","Error","17"
+"Http 500-599 errors ","Error","3"
+"Title too long ","Warning","100"
+"Alt attribute for images is missing ","Warning","71"
+"More than one h1 tag ","Notice","8"
+"H1 tag missing ","Notice","1"

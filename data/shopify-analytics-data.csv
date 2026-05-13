@@ -1,0 +1,29 @@
+"Month","Referring channel","Referring medium","Orders (last click)","Conversion rate"
+"2026-01-01","bing","search",3,0.03296703296703297
+"2026-01-01","google","search",41,0.012714558169103624
+"2026-01-01","yahoo!","search",1,0.041666666666666664
+"2026-01-01","duckduckgo","search",0,0
+"2026-01-01","baidu","search",0,0
+"2026-01-01","yandex","search",0,0
+"2026-02-01","bing","search",8,0.10256410256410256
+"2026-02-01","google","search",36,0.021227768215720023
+"2026-02-01","duckduckgo","search",0,0
+"2026-02-01","yandex","search",0,0
+"2026-02-01","yahoo!","search",0,0
+"2026-02-01","yellowpages","search",0,0
+"2026-02-01","technorati","search",0,0
+"2026-03-01","google","search",80,0.03191065017949741
+"2026-03-01","bing","search",6,0.08571428571428572
+"2026-03-01","yahoo!","search",2,0.06896551724137931
+"2026-03-01","ecosia","search",0,0
+"2026-03-01","yandex","search",0,0
+"2026-03-01","yahoo! images","search",0,0
+"2026-03-01","baidu","search",0,0
+"2026-03-01","duckduckgo","search",0,0
+"2026-04-01","yahoo!","search",2,0.009523809523809525
+"2026-04-01","google","search",80,0.023920653442240373
+"2026-04-01","bing","search",4,0.002403846153846154
+"2026-04-01","duckduckgo","search",0,0
+"2026-04-01","yahoo! images","search",0,0
+"2026-04-01","baidu","search",0,0
+"2026-04-01","yandex","search",0,0

@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DTF Printer USA - Bing</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../reports-shared/assets/style.css">
+<script src="../../reports-shared/assets/scale.js"></script>
+<style>
+:root{--page-accent:#0078d4;--page-accent-soft:rgba(0,120,212,.10)}
+body:has(.page-nav) .wrap{padding-top:8px;padding-bottom:8px}
+.source-strip{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:5px 8px;margin-bottom:8px;font-size:9px;color:var(--muted-2)}
+.bing-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}
+.bing-kpi-row .rpt-kpi{padding:8px 12px}
+.bing-kpi-row .rpt-kpi .l{font-size:9px;margin-bottom:2px}
+.bing-kpi-row .rpt-kpi .n{font-size:22px;line-height:1}
+.bing-kpi-row .rpt-kpi .kpi-sub{font-size:9px;color:var(--muted-2)}
+.bing-kpi-row .delta-row{display:flex;justify-content:space-between;align-items:center;font-size:9px;margin-top:4px}
+.bing-kpi-row .delta-row .lab{color:var(--muted)}
+.bing-kpi-row .delta-row .val{font-weight:700}
+.bing-kpi-row .delta-row .val.up{color:var(--pos)}
+.bing-kpi-row .delta-row .val.down{color:var(--neg)}
+.bing-layout{display:flex;gap:8px;align-items:stretch}
+.bing-main{flex:7;min-width:0}
+.bing-side{flex:3;min-width:0}
+.chart-wrap{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.chart-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px;background:var(--page-accent-soft);border-radius:6px;padding:6px 8px}
+.chart-title{font-size:13px;font-weight:700;color:var(--ink)}
+.chart-canvas-box{position:relative;height:152px;flex-shrink:0}
+.chart-canvas-box canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important}
+.pos-note{flex-shrink:0;font-size:10px;color:var(--muted);margin:0;font-style:italic}
+.bing-insights{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px;height:100%;display:flex;flex-direction:column}
+.ki-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-shrink:0}
+.ki-icon{font-size:16px}
+.ki-header-title{font-size:13px;font-weight:700;color:var(--ink)}
+.bing-insights ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;flex:1}
+.bing-insights li{font-size:10.5px;line-height:1.4;color:var(--ink-2);padding-left:12px;position:relative}
+.bing-insights li::before{content:'';position:absolute;left:0;top:6px;width:6px;height:6px;border-radius:50%;background:var(--page-accent)}
+.bing-insights li strong{color:var(--ink)}
+.bing-bottom{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.bing-panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.bing-panel-title{font-size:11px;font-weight:700;color:var(--ink);margin:0 0 6px;background:var(--page-accent-soft);border-radius:6px;padding:5px 7px}
+.bing-table{width:100%;border-collapse:collapse;table-layout:fixed}
+.bing-table col.col-text{width:58%}
+.bing-table col.col-text-page{width:62%}
+.bing-table col.col-num{width:10.5%}
+.bing-table th{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);padding:4px 6px;border-bottom:1px solid var(--line);text-align:left}
+.bing-table th.num,.bing-table td.num{text-align:right}
+.bing-table td{font-size:9.5px;color:var(--ink-2);padding:3px 6px;border-bottom:1px solid var(--line-soft)}
+.bing-table td.num{font-variant-numeric:tabular-nums;font-weight:700}
+.bing-table tr:has(.up) td{background:rgba(0,146,71,.04)}
+.bing-table tr:has(.down) td{background:rgba(192,57,43,.04)}
+.bing-table td.url,.bing-table td.kw{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bing-hidden{display:none}
+.see-more-btn{background:none;border:none;font-size:10px;color:var(--page-accent);font-weight:700;cursor:pointer;padding:6px 0 0;text-align:left;font-family:inherit}
+.see-more-btn:hover{text-decoration:underline}
+.bing-footer{margin-top:8px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted-2);padding:0 2px}
+.bing-main .chart-wrap,.bing-insights{height:100%}
+</style>
+</head>
+<body>
+<script src="../../reports-shared/components/_pages.js"></script>
+<script>
+(function(){
+  var pages=(window.REPORT_PAGES||[]);
+  var nav=document.createElement('nav');
+  nav.className='page-nav';
+  nav.innerHTML='<div class="nav-left"><span class="nav-page-title">Bing</span></div>'+
+    '<div class="nav-links">'+
+    pages.map(function(p){
+      return '<a href="'+p.href+'" class="nav-btn'+(p.id==='bing'?' active':'')+'">'+(p.id==='index'?'Cover':p.label)+'</a>';
+    }).join('')+'</div>';
+  document.body.insertBefore(nav,document.currentScript);
+})();
+</script>
+<div class="wrap">
+
+  <div class="source-strip"><span>Source: Bing Webmaster Tools</span><span></span></div>
+
+  <div class="bing-kpi-row">
+    <div class="rpt-kpi" style="border-top:4px solid var(--accent)">
+      <div class="l">Apr Clicks</div>
+      <div class="n" id="bing-kpi-clicks">—</div>
+      <div class="kpi-sub"></div>
+      <div class="delta-row"><span class="lab">MoM</span><span class="val" id="bing-kpi-clicks-mom">—</span></div>
+    </div>
+    <div class="rpt-kpi">
+      <div class="l">Apr Impressions</div>
+      <div class="n" id="bing-kpi-impr">—</div>
+      <div class="kpi-sub"></div>
+      <div class="delta-row"><span class="lab">MoM</span><span class="val" id="bing-kpi-impr-mom">—</span></div>
+    </div>
+    <div class="rpt-kpi">
+      <div class="l">Apr CTR</div>
+      <div class="n" id="bing-kpi-ctr">—</div>
+      <div class="kpi-sub"></div>
+      <div class="delta-row"><span class="lab">MoM</span><span class="val" id="bing-kpi-ctr-mom">—</span></div>
+    </div>
+    <div class="rpt-kpi">
+      <div class="l">Top Brand Query</div>
+      <div class="n">—</div>
+      <div class="kpi-sub"></div>
+    </div>
+  </div>
+
+  <div class="bing-layout">
+    <div class="bing-main">
+      <div class="chart-wrap">
+        <div class="chart-header">
+          <span class="chart-title">Yearly Trend</span>
+          <div class="chart-toggles" style="margin-bottom:0">
+            <button class="chart-btn active-impr" id="btn-bing-impr" onclick="toggleBingMetric('impressions')">&#9679; Impressions</button>
+            <button class="chart-btn active-clicks" id="btn-bing-clicks" onclick="toggleBingMetric('clicks')">&#9679; Clicks</button>
+            <button class="chart-btn" id="btn-bing-ctr" onclick="toggleBingMetric('ctr')">&#9679; CTR</button>
+          </div>
+        </div>
+        <div class="chart-canvas-box">
+          <canvas id="bingChart"></canvas>
+        </div>
+        <p class="pos-note" id="bingChartNote">Bing performance rolled up monthly.</p>
+      </div>
+    </div>
+
+    <div class="bing-side">
+      <div class="bing-insights">
+        <div class="ki-header">
+          <span class="ki-icon">💡</span>
+          <span class="ki-header-title">Insights</span>
+        </div>
+        <ul><li>Loading data…</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="bing-bottom">
+    <section class="bing-panel">
+      <h3 class="bing-panel-title">Top Queries</h3>
+      <table class="bing-table">
+        <colgroup>
+          <col class="col-text">
+          <col class="col-num">
+          <col class="col-num">
+          <col class="col-num">
+          <col class="col-num">
+        </colgroup>
+        <thead>
+          <tr><th>Keyword</th><th class="num">Impr.</th><th class="num">Clicks</th><th class="num">CTR</th><th class="num">Pos.</th></tr>
+        </thead>
+        <tbody data-csv-table="data/bing-queries.csv">
+          <tr><td colspan="20">Loading data…</td></tr>
+        </tbody>
+      </table>
+      <button class="see-more-btn" id="bingQueryToggle" onclick="toggleBingRows('query')" style="display:none">See 10 more queries</button>
+    </section>
+
+    <section class="bing-panel">
+      <h3 class="bing-panel-title">Top Pages</h3>
+      <table class="bing-table">
+        <colgroup>
+          <col class="col-text-page">
+          <col class="col-num">
+          <col class="col-num">
+          <col class="col-num">
+          <col class="col-num">
+        </colgroup>
+        <thead>
+          <tr><th>Page</th><th class="num">Impr.</th><th class="num">Clicks</th><th class="num">CTR</th><th class="num">Pos.</th></tr>
+        </thead>
+        <tbody data-csv-table="data/bing-pages.csv">
+          <tr><td colspan="20">Loading data…</td></tr>
+        </tbody>
+      </table>
+      <button class="see-more-btn" id="bingPageToggle" onclick="toggleBingRows('page')" style="display:none">See 10 more pages</button>
+    </section>
+  </div>
+
+  <div class="bing-footer">
+    <span>Source: Bing Webmaster Tools</span>
+    <span>Last updated: May 8, 2026</span>
+  </div>
+
+</div>
+<script>
+if(window.Chart&&window.ChartDataLabels)Chart.register(ChartDataLabels);
+function parseCSV(text){
+  text=String(text||'').replace(/^\uFEFF/,'');
+  var rows=[],row=[],field='',inQ=false;
+  for(var i=0;i<text.length;i++){var c=text[i];
+    if(inQ){if(c==='"'){if(text[i+1]==='"'){field+='"';i++;}else{inQ=false;}}else{field+=c;}}
+    else{if(c==='"'){inQ=true;}else if(c===','){row.push(field);field='';}
+      else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);field='';if(row.length>1||row[0]!=='')rows.push(row);row=[];}
+      else{field+=c;}}
+  }
+  if(field!==''||row.length){row.push(field);rows.push(row);}
+  if(!rows.length)return{headers:[],rows:[]};
+  var h=rows.shift().map(function(x){return x.trim();});
+  return{headers:h,rows:rows.map(function(r){var o={};h.forEach(function(k,i){o[k]=r[i]!=null?r[i]:'';});return o;})};
+}
+async function loadCSV(p){try{var r=await fetch(p,{cache:'no-store'});if(!r.ok)throw new Error(r.status);var parsed=parseCSV(await r.text());return parsed.rows.length?parsed:null;}catch(e){return null;}}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function num(v){return Number(String(v==null?'':v).replace(/[^0-9.-]/g,''))||0;}
+function fmt(v){v=num(v);return v.toLocaleString('en-US',{maximumFractionDigits:0});}
+function pct(v){return (num(v)).toFixed(1)+'%';}
+function delta(cur,prev){if(!prev)return null;return (cur-prev)/prev*100;}
+function dText(v){if(v===null||!isFinite(v))return '—';return (v>=0?'+':'')+v.toFixed(1)+'%';}
+function dClass(v){return v===null||!isFinite(v)?'':(v>=0?'up':'down');}
+function msg(file){return 'Report data is unavailable.';}
+function setText(id,value){var el=document.getElementById(id);if(el)el.textContent=value;}
+function setDelta(id,value){var el=document.getElementById(id);if(!el)return;el.textContent=dText(value);el.classList.remove('up','down','placeholder');var cls=dClass(value);if(cls)el.classList.add(cls);}
+function monthIndex(label){var m={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};var p=String(label||'').trim().split(/\s+/);return (Number(p[p.length-1])||0)*12+(m[String(p[0]||'').slice(0,3).toLowerCase()]||0);}
+function pathLabel(p){p=String(p||'');try{var u=new URL(p);p=u.pathname||'/';}catch(e){}return p||'/';}
+
+var bing={trend:[],queries:[],pages:[],metrics:new Set(['impressions']),chart:null,visible:{query:5,page:5}};
+function updateBingKpis(){var t=bing.trend.slice().sort(function(a,b){return monthIndex(a.month)-monthIndex(b.month);});if(!t.length)return;var cur=t[t.length-1],prev=t[t.length-2]||{};setText('bing-kpi-clicks',fmt(cur.clicks));setText('bing-kpi-impr',fmt(cur.impressions));setText('bing-kpi-ctr',(num(cur.ctr)).toFixed(2)+'%');setDelta('bing-kpi-clicks-mom',delta(num(cur.clicks),num(prev.clicks)));setDelta('bing-kpi-impr-mom',delta(num(cur.impressions),num(prev.impressions)));var ctrDelta=prev.ctr?num(cur.ctr)-num(prev.ctr):null;setText('bing-kpi-ctr-mom',ctrDelta===null?'—':(ctrDelta>=0?'+':'')+ctrDelta.toFixed(2)+' pts');var brand=bing.queries.find(function(r){return /dtf printer usa|dtfprinterusa|rustic united/i.test(r.keyword||'');})||bing.queries[0];var card=[].slice.call(document.querySelectorAll('.rpt-kpi')).find(function(k){return /Top Brand Query/.test(k.textContent);});if(card&&brand){card.querySelector('.n').textContent=brand.keyword;card.querySelector('.kpi-sub').textContent=fmt(brand.clicks)+' clicks · '+fmt(brand.impressions)+' impr.';}}
+function renderBingChart(){var t=bing.trend.slice().sort(function(a,b){return monthIndex(a.month)-monthIndex(b.month);});var labels=t.map(function(r){return r.month.replace(' 202',' ’2');});var defs={impressions:['impressions','Impressions','#F28C28','yCount'],clicks:['clicks','Clicks','#2563eb','yCount'],ctr:['ctr','CTR','#009247','yCtr']};var order=['impressions','clicks','ctr'];var selected=order.filter(function(k){return bing.metrics.has(k);});if(!selected.length){bing.metrics.add('impressions');selected=['impressions'];}var datasets=selected.map(function(k){var cfg=defs[k];return{label:cfg[1],data:t.map(function(r){return num(r[cfg[0]]);}),borderColor:cfg[2],backgroundColor:cfg[2]+'22',borderWidth:2.5,pointRadius:3,tension:.32,yAxisID:cfg[3],datalabels:{display:k==='impressions'||selected.length===1,align:'top',anchor:'end',color:cfg[2],font:{size:10,weight:'700'},formatter:function(v){return k==='ctr'?v.toFixed(1)+'%':(v?fmt(v):'');}}};});if(bing.chart)bing.chart.destroy();var el=document.getElementById('bingChart');if(!el||!window.Chart)return;bing.chart=new Chart(el,{type:'line',data:{labels:labels,datasets:datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',borderColor:'#D9D9D9',borderWidth:1,titleColor:'#1A1A1A',bodyColor:'#2B2B2B',callbacks:{label:function(c){return ' '+c.dataset.label+': '+(c.dataset.yAxisID==='yCtr'?c.raw.toFixed(2)+'%':fmt(c.raw));}}},datalabels:{display:function(ctx){return ctx.dataset.datalabels&&ctx.dataset.datalabels.display;}}},scales:{x:{grid:{color:'#EFEFEF'},ticks:{color:'#666',font:{size:10}}},yCount:{type:'linear',position:'left',grid:{color:'#EFEFEF'},ticks:{color:'#666',font:{size:10},callback:function(v){return v>=1000?Math.round(v/1000)+'K':v}},beginAtZero:true,display:bing.metrics.has('impressions')||bing.metrics.has('clicks')},yCtr:{type:'linear',position:'right',grid:{drawOnChartArea:false},ticks:{color:'#009247',font:{size:10},callback:function(v){return v+'%'}},beginAtZero:true,display:bing.metrics.has('ctr')}}}});document.querySelectorAll('.chart-toggles .chart-btn').forEach(function(b){b.classList.remove('active-impr','active-clicks');});if(bing.metrics.has('impressions'))document.getElementById('btn-bing-impr').classList.add('active-impr');if(bing.metrics.has('clicks'))document.getElementById('btn-bing-clicks').classList.add('active-clicks');if(bing.metrics.has('ctr'))document.getElementById('btn-bing-ctr').classList.add('active-impr');}
+function renderBingInsights(){var ul=document.querySelector('.bing-insights ul');if(!ul)return;var t=bing.trend.slice().sort(function(a,b){return monthIndex(a.month)-monthIndex(b.month);});if(!t.length){ul.innerHTML='<li>'+msg('data/bing-trend.csv')+'</li>';return;}var cur=t[t.length-1],prev=t[t.length-2]||{};var topQ=bing.queries[0],topP=bing.pages[0];var items=[];items.push('<strong>'+esc(cur.month)+' impressions: '+fmt(cur.impressions)+'.</strong> Clicks: '+fmt(cur.clicks)+'.');if(prev.month)items.push('<strong>Clicks '+dText(delta(num(cur.clicks),num(prev.clicks)))+' MoM.</strong> '+esc(cur.month)+' compared with '+esc(prev.month)+'.');if(topQ)items.push('<strong>Top query:</strong> '+esc(topQ.keyword)+' with '+fmt(topQ.clicks)+' clicks.');if(topP)items.push('<strong>Top page:</strong> '+esc(pathLabel(topP.page))+' with '+fmt(topP.clicks)+' clicks.');ul.innerHTML=items.map(function(x){return'<li>'+x+'</li>';}).join('');}
+function renderBingTable(type){var rows=(type==='query'?bing.queries:bing.pages);var tb=document.querySelector('[data-csv-table="data/bing-'+(type==='query'?'queries':'pages')+'.csv"]');if(!tb)return;if(!rows.length){tb.innerHTML='<tr><td colspan="5">'+msg('data/bing-'+(type==='query'?'queries':'pages')+'.csv')+'</td></tr>';return;}tb.innerHTML=rows.slice(0,bing.visible[type]).map(function(r){var label=type==='query'?r.keyword:pathLabel(r.page);return'<tr><td>'+esc(label)+'</td><td class="num">'+fmt(r.impressions)+'</td><td class="num">'+fmt(r.clicks)+'</td><td class="num">'+esc(r.ctr||'0%')+'</td><td class="num">'+(num(r.position)).toFixed(2)+'</td></tr>';}).join('');var btn=document.getElementById(type==='query'?'bingQueryToggle':'bingPageToggle');if(btn){btn.style.display=rows.length>bing.visible[type]?'inline-block':'none';btn.textContent='See 10 more '+(type==='query'?'queries':'pages');}}
+function toggleBingMetric(metric){if(bing.metrics.has(metric)){bing.metrics.delete(metric);}else{bing.metrics.add(metric);}if(bing.metrics.size===0)bing.metrics.add('impressions');renderBingChart();}
+function toggleBingRows(type){bing.visible[type]+=10;renderBingTable(type);}
+async function initBing(){var t=await loadCSV('data/bing-trend.csv'),q=await loadCSV('data/bing-queries.csv'),p=await loadCSV('data/bing-pages.csv');bing.trend=t?t.rows:[];bing.queries=q?q.rows.sort(function(a,b){return num(b.clicks)-num(a.clicks)||num(b.impressions)-num(a.impressions);}):[];bing.pages=p?p.rows.sort(function(a,b){return num(b.clicks)-num(a.clicks)||num(b.impressions)-num(a.impressions);}):[];updateBingKpis();renderBingChart();renderBingInsights();renderBingTable('query');renderBingTable('page');}
+window.addEventListener('load',initBing);
+</script>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DTF Printer USA - AI Search</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../reports-shared/assets/style.css">
+<script src="../../reports-shared/assets/scale.js"></script>
+<style>
+:root{--page-accent:#7a4eb8;--page-accent-soft:rgba(122,78,184,.10)}
+body:has(.page-nav) .wrap{padding-top:8px;padding-bottom:10px}
+
+/* ── 50/50 split ── */
+.ai-split{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+.ai-col{display:flex;flex-direction:column;gap:6px;min-width:0}
+
+/* ── Column header ── */
+.ai-col-hdr{display:flex;justify-content:space-between;align-items:baseline;padding:5px 10px;border-radius:6px;background:var(--surface);border:1px solid var(--line);margin-bottom:2px}
+.ai-col-hdr-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink)}
+.ai-col-hdr-sub{font-size:9px;color:var(--muted);font-style:italic}
+
+/* ── KPIs: 2 per column ── */
+.ai-kpi-2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ai-kpi-2 .rpt-kpi{padding:7px 10px}
+.ai-kpi-2 .rpt-kpi .n{font-size:20px}
+.ai-kpi-2 .rpt-kpi .kpi-sub{font-size:8.5px}
+.ai-kpi-2 .rpt-kpi .deltas{margin-top:4px;padding-top:4px}
+.ai-kpi-2 .rpt-kpi .delta-row{font-size:9px;line-height:1.55}
+.ai-kpi-2 .rpt-kpi .delta-row .lab{font-size:8px}
+
+/* ── Mid row: 60/40 within each column ── */
+.ai-mid-row{display:grid;grid-template-columns:3fr 2fr;gap:6px;align-items:start}
+.ai-panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.ai-panel-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;background:var(--page-accent-soft);border-radius:6px;padding:5px 7px}
+.ai-panel-title{font-size:10px;font-weight:700;color:var(--ink);text-transform:uppercase;letter-spacing:.3px}
+.ai-panel-note{font-size:8px;color:var(--muted);font-style:italic}
+.ai-chart-box{position:relative;height:118px}
+.ai-chart-box canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important}
+
+/* ── Donut ── */
+.ai-donut-wrap{display:flex;align-items:center;gap:8px;height:118px}
+.ai-donut-canvas{position:relative;width:70px;height:70px;flex-shrink:0}
+.ai-donut-canvas canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important}
+.ai-donut-legend{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.ai-legend-row{display:flex;justify-content:space-between;align-items:center;font-size:9px;gap:3px}
+.ai-legend-left{display:flex;align-items:center;gap:4px;min-width:0}
+.ai-legend-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.ai-legend-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2)}
+.ai-legend-stat{font-weight:700;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums;font-size:8.5px}
+.ai-legend-pct{font-size:8px;color:var(--muted);white-space:nowrap}
+
+/* ── Tables ── */
+.ai-tbl-wrap{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 12px}
+.ai-tbl-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.ai-tbl-title{font-size:9.5px;font-weight:700;color:var(--ink);text-transform:uppercase;letter-spacing:.3px;background:var(--page-accent-soft);border-radius:6px;padding:5px 7px}
+.ai-tbl-note{font-size:8px;color:var(--muted);font-style:italic}
+.ai-tbl{width:100%;border-collapse:collapse;font-size:9px;table-layout:fixed}
+.ai-tbl th{font-size:7.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;background:var(--header-dark);color:#fff;padding:3px 5px;text-align:left;white-space:nowrap;border-bottom:none}
+.ai-tbl th.r{text-align:right}
+.ai-tbl td{padding:3px 5px;border-bottom:1px solid var(--line-soft);color:var(--ink-2);vertical-align:middle}
+.ai-tbl td.r{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink)}
+.ai-tbl td.rn{color:var(--muted);font-size:8px;width:22px}
+.ai-tbl td.pg{font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ai-tbl tr:last-child td{border-bottom:0}
+.ai-tbl tbody tr:nth-child(1) td{background:var(--page-accent-soft)}
+.ai-tbl tbody tr:nth-child(2) td,.ai-tbl tbody tr:nth-child(3) td{background:rgba(100,116,139,.035)}
+.ai-tbl-extra{display:none}
+.ai-see-more{background:none;border:none;font-size:9.5px;color:var(--page-accent);font-weight:700;cursor:pointer;padding:3px 0 0;font-family:inherit}
+.ai-see-more:hover{text-decoration:underline}
+
+/* ── Footer ── */
+.gsc-footer{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted-2);padding:6px 2px 0}
+</style>
+</head>
+<body>
+<script src="../../reports-shared/components/_pages.js"></script>
+<script>
+(function(){
+  var pages=(window.REPORT_PAGES||[]);
+  var nav=document.createElement('nav');
+  nav.className='page-nav';
+  nav.innerHTML='<div class="nav-left"><span class="nav-page-title">AI Search</span></div>'+
+    '<div class="nav-links">'+
+    pages.map(function(p){
+      return '<a href="'+p.href+'" class="nav-btn'+(p.id==='aisearch'?' active':'')+'">'+(p.id==='index'?'Cover':p.label)+'</a>';
+    }).join('')+'</div>';
+  document.body.insertBefore(nav,document.currentScript);
+})();
+</script>
+<div class="wrap">
+<div class="ai-split">
+
+  <!-- ══════════ GA4 AI COLUMN ══════════ -->
+  <div class="ai-col">
+
+    <div class="ai-col-hdr" style="border-top:3px solid #10a37f">
+      <span class="ai-col-hdr-title">GA4 AI Traffic</span>
+      <span class="ai-col-hdr-sub">May 2025 - Apr 2026 · all LLM sources</span>
+    </div>
+
+    <div class="ai-kpi-2">
+      <div class="rpt-kpi" style="border-top:4px solid #10a37f">
+        <div class="l">AI Sessions</div>
+        <div class="n">—</div>
+        <div class="kpi-sub"></div>
+        <div class="deltas">
+          <div class="delta-row"><span class="lab">MoM</span><span class="val up">—</span></div>
+        </div>
+      </div>
+      <div class="rpt-kpi">
+        <div class="l">ChatGPT Share</div>
+        <div class="n">—</div>
+        <div class="kpi-sub"></div>
+        <div class="deltas">
+          <div class="delta-row"><span class="lab">Engaged rate</span><span class="val up">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-mid-row">
+      <div class="ai-panel">
+        <div class="ai-panel-header">
+          <span class="ai-panel-title">Sessions Over Time</span>
+          <span class="ai-panel-note">Sessions · Engaged (dashed)</span>
+        </div>
+        <div class="ai-chart-box"><canvas id="ga4AiChart"></canvas></div>
+      </div>
+      <div class="ai-panel">
+        <div class="ai-panel-header">
+          <span class="ai-panel-title">LLM Breakdown</span>
+          <span class="ai-panel-note">Apr 2026</span>
+        </div>
+        <div class="ai-donut-wrap">
+          <div class="ai-donut-canvas"><canvas id="ga4LlmDonut"></canvas></div>
+          <div class="ai-donut-legend"><div class="ai-legend-row">Loading data…</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-tbl-wrap">
+      <div class="ai-tbl-head">
+        <div class="ai-tbl-title">Top AI Landing Pages</div>
+        <div class="ai-tbl-note">Apr 2026 · all sources</div>
+      </div>
+      <table class="ai-tbl">
+        <colgroup><col style="width:22px"><col><col style="width:55px"></colgroup>
+        <thead><tr><th>#</th><th>Landing Page</th><th class="r">Sessions</th></tr></thead>
+        <tbody data-csv-table="data/aisearch-ga4-pages.csv">
+          <tr><td colspan="20">Loading data…</td></tr>
+        </tbody>
+      </table>
+      <button class="ai-see-more" id="ga4-see-more" onclick="toggleAiTable('ga4')" style="display:none">▼ See 10 more pages</button>
+    </div>
+
+  </div><!-- /ga4 col -->
+
+  <!-- ══════════ BING AI COLUMN ══════════ -->
+  <div class="ai-col">
+
+    <div class="ai-col-hdr" style="border-top:3px solid #0078d4">
+      <span class="ai-col-hdr-title">Bing AI / Copilot</span>
+      <span class="ai-col-hdr-sub">Jan 2026 - Apr 2026 · AI citations</span>
+    </div>
+
+    <div class="ai-kpi-2">
+      <div class="rpt-kpi" style="border-top:4px solid #0078d4">
+        <div class="l">Total Citations</div>
+        <div class="n">—</div>
+        <div class="kpi-sub"></div>
+        <div class="deltas">
+          <div class="delta-row"><span class="lab">Avg / day</span><span class="val">—</span></div>
+        </div>
+      </div>
+      <div class="rpt-kpi">
+        <div class="l">Cited Pages</div>
+        <div class="n">—</div>
+        <div class="kpi-sub"></div>
+        <div class="deltas">
+          <div class="delta-row"><span class="lab">Apr MoM</span><span class="val down">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full-width chart -->
+    <div class="ai-panel">
+      <div class="ai-panel-header">
+        <span class="ai-panel-title">Monthly Citations</span>
+        <span class="ai-panel-note">Bing AI / Copilot</span>
+      </div>
+      <div class="ai-chart-box" style="height:140px"><canvas id="bingAiChart"></canvas></div>
+    </div>
+
+    <!-- Top Cited Pages -->
+    <div class="ai-tbl-wrap">
+      <div class="ai-tbl-head">
+        <div class="ai-tbl-title">Top Cited Pages</div>
+        <div class="ai-tbl-note">Jan 2026 - Apr 2026 · cumulative</div>
+      </div>
+      <table class="ai-tbl">
+        <colgroup><col style="width:22px"><col><col style="width:62px"></colgroup>
+        <thead><tr><th>#</th><th>Page</th><th class="r">Citations</th></tr></thead>
+        <tbody data-csv-table="data/aisearch-bing-pages.csv">
+          <tr><td colspan="20">Loading data…</td></tr>
+        </tbody>
+      </table>
+      <button class="ai-see-more" id="bing-see-more" onclick="toggleAiTable('bing')" style="display:none">▼ See 10 more pages</button>
+    </div>
+
+    <!-- Top Queries -->
+    <div class="ai-tbl-wrap">
+      <div class="ai-tbl-head">
+        <div class="ai-tbl-title">Top Queries</div>
+        <div class="ai-tbl-note">Grounding citations · Apr 2026</div>
+      </div>
+      <table class="ai-tbl">
+        <colgroup><col style="width:22px"><col><col style="width:62px"></colgroup>
+        <thead><tr><th>#</th><th>Query</th><th class="r">Citations</th></tr></thead>
+        <tbody data-csv-table="data/aisearch-bing-queries.csv">
+          <tr><td colspan="20">Loading data…</td></tr>
+        </tbody>
+      </table>
+      <button class="ai-see-more" id="bingq-see-more" onclick="toggleAiTable('bingq')" style="display:none">▼ See 5 more queries</button>
+    </div>
+
+  </div><!-- /bing col -->
+
+</div><!-- /ai-split -->
+
+<div class="gsc-footer">
+  <span>Sources: Google Analytics 4 · AI Traffic Report &nbsp;|&nbsp; Bing Webmaster Tools · AI Stats</span>
+  <span>Data period: May 2025 - Apr 2026 · Generated: May 8, 2026</span>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+if(window.Chart&&window.ChartDataLabels)Chart.register(ChartDataLabels);
+function parseCSV(text){
+  text=String(text||'').replace(/^\uFEFF/,'');
+  var rows=[],row=[],field='',inQ=false;
+  for(var i=0;i<text.length;i++){var c=text[i];
+    if(inQ){if(c==='"'){if(text[i+1]==='"'){field+='"';i++;}else{inQ=false;}}else{field+=c;}}
+    else{if(c==='"'){inQ=true;}else if(c===','){row.push(field);field='';}
+      else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);field='';if(row.length>1||row[0]!=='')rows.push(row);row=[];}
+      else{field+=c;}}
+  }
+  if(field!==''||row.length){row.push(field);rows.push(row);}
+  if(!rows.length)return{headers:[],rows:[]};
+  var h=rows.shift().map(function(x){return x.trim();});
+  return{headers:h,rows:rows.map(function(r){var o={};h.forEach(function(k,i){o[k]=r[i]!=null?r[i]:'';});return o;})};
+}
+async function loadCSV(p){try{var r=await fetch(p,{cache:'no-store'});if(!r.ok)throw new Error(r.status);var parsed=parseCSV(await r.text());return parsed.rows.length?parsed:null;}catch(e){return null;}}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function num(v){return Number(String(v==null?'':v).replace(/[^0-9.-]/g,''))||0;}
+function fmt(v){v=num(v);return v.toLocaleString('en-US',{maximumFractionDigits:0});}
+function pct(v){return (num(v)).toFixed(1)+'%';}
+function delta(cur,prev){if(!prev)return null;return (cur-prev)/prev*100;}
+function dText(v){if(v===null||!isFinite(v))return '—';return (v>=0?'+':'')+v.toFixed(1)+'%';}
+function dClass(v){return v===null||!isFinite(v)?'':(v>=0?'up':'down');}
+function msg(file){return 'Report data is unavailable.';}
+function setText(id,value){var el=document.getElementById(id);if(el)el.textContent=value;}
+function setDelta(id,value){var el=document.getElementById(id);if(!el)return;el.textContent=dText(value);el.classList.remove('up','down','placeholder');var cls=dClass(value);if(cls)el.classList.add(cls);}
+function monthIndex(label){var m={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};var p=String(label||'').trim().split(/\s+/);return (Number(p[p.length-1])||0)*12+(m[String(p[0]||'').slice(0,3).toLowerCase()]||0);}
+function pathLabel(p){p=String(p||'');try{var u=new URL(p);p=u.pathname||'/';}catch(e){}return p||'/';}
+
+var ai={ga4Trend:[],llm:[],ga4Pages:[],bingTrend:[],bingPages:[],bingQueries:[],charts:{},visible:{ga4:5,bing:5,bingq:5}};
+var AI_COLORS=['#10a37f','#0078d4','#cc785c','#4285f4','#1fb8cd','#7a4eb8','#F28C28','#6b7280'];
+function sourceLabel(source){source=String(source||'');var map={'chatgpt.com':'ChatGPT','copilot.com':'Copilot','copilot.microsoft.com':'Copilot','claude.ai':'Claude','perplexity.ai':'Perplexity','perplexity':'Perplexity','gemini.google.com':'Gemini','cn.bing.com':'Bing'};return map[source.toLowerCase()]||source;}
+function shortMonth(label){var p=String(label||'').split(/\s+/);return p[0]+" '"+String(p[1]||'').slice(-2);}
+function drawGa4AiChart(){var el=document.getElementById('ga4AiChart');if(!el||!window.Chart||!ai.ga4Trend.length)return;if(ai.charts.ga4AiChart)ai.charts.ga4AiChart.destroy();var rows=ai.ga4Trend.slice().sort(function(a,b){return monthIndex(a.month)-monthIndex(b.month);});ai.charts.ga4AiChart=new Chart(el,{type:'line',data:{labels:rows.map(function(r){return shortMonth(r.month);}),datasets:[{label:'Sessions',data:rows.map(function(r){return num(r.sessions);}),borderColor:'#10a37f',backgroundColor:'rgba(16,163,127,.10)',borderWidth:2,pointRadius:3,tension:.3,datalabels:{display:true,color:'#10a37f',font:{size:8,weight:'700'},anchor:'end',align:'top',offset:1,formatter:function(v){return v;}}},{label:'Engaged',data:rows.map(function(r){return num(r.engaged_sessions);}),borderColor:'#888',backgroundColor:'transparent',borderWidth:1.5,pointRadius:2,tension:.3,borderDash:[4,3],datalabels:{display:false}}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',borderColor:'#D9D9D9',borderWidth:1,titleColor:'#1A1A1A',bodyColor:'#2B2B2B',callbacks:{label:function(c){return ' '+c.dataset.label+': '+fmt(c.raw);}}},datalabels:{display:function(ctx){return ctx.datasetIndex===0;}}},scales:{x:{grid:{color:'#EFEFEF'},ticks:{color:'#666',font:{size:8}}},y:{grid:{color:'#EFEFEF'},ticks:{color:'#666',font:{size:8}},beginAtZero:true}}}});}
+function drawLine(id,rows,labelKey,valueKey,label,color){var el=document.getElementById(id);if(!el||!window.Chart)return;if(ai.charts[id])ai.charts[id].destroy();rows=rows.slice().sort(function(a,b){return monthIndex(a[labelKey])-monthIndex(b[labelKey]);});ai.charts[id]=new Chart(el,{type:'line',data:{labels:rows.map(function(r){return shortMonth(r[labelKey]);}),datasets:[{label:label,data:rows.map(function(r){return num(r[valueKey]);}),borderColor:color,backgroundColor:color+'22',borderWidth:2.5,pointRadius:3,tension:.32}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',borderColor:'#D9D9D9',borderWidth:1,titleColor:'#1A1A1A',bodyColor:'#2B2B2B'},datalabels:{align:'top',anchor:'end',color:'#0078d4',font:{size:9,weight:'700'},formatter:function(v){return v?fmt(v):'';}}},scales:{x:{grid:{color:'#EFEFEF'},ticks:{color:'#666',font:{size:9}}},y:{grid:{color:'#EFEFEF'},ticks:{color:'#666',font:{size:9}},beginAtZero:true}}}});}
+function drawDonut(){var el=document.getElementById('ga4LlmDonut'),legend=document.querySelector('.ai-donut-legend');if(!el||!window.Chart)return;if(!ai.llm.length){if(legend)legend.innerHTML='<div class="ai-legend-row">'+msg('data/aisearch-llm-sources.csv')+'</div>';return;}var rows=ai.llm.slice().sort(function(a,b){return num(b.sessions)-num(a.sessions);});var labels=rows.map(function(r){return sourceLabel(r.source);}),data=rows.map(function(r){return num(r.sessions);});if(ai.charts.ga4LlmDonut)ai.charts.ga4LlmDonut.destroy();ai.charts.ga4LlmDonut=new Chart(el,{type:'doughnut',data:{labels:labels,datasets:[{data:data,backgroundColor:AI_COLORS.slice(0,labels.length),borderWidth:0,hoverOffset:4}]},options:{cutout:'68%',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',borderColor:'#D9D9D9',borderWidth:1,titleColor:'#1A1A1A',bodyColor:'#2B2B2B',callbacks:{label:function(c){return ' '+c.label+': '+fmt(c.raw);}}},datalabels:{display:false}}}});if(legend)legend.innerHTML=rows.map(function(r,i){return'<div class="ai-legend-row"><div class="ai-legend-left"><span class="ai-legend-dot" style="background:'+AI_COLORS[i%AI_COLORS.length]+'"></span><span class="ai-legend-label">'+esc(sourceLabel(r.source))+'</span></div><span class="ai-legend-stat">'+fmt(r.sessions)+'</span><span class="ai-legend-pct">'+pct(r.share_pct)+'</span></div>';}).join('');}
+function setGa4Missing(){var text=msg('data/aisearch-ga4-trend.csv');document.querySelectorAll('.ai-col:first-child .rpt-kpi .kpi-sub').forEach(function(e){e.textContent=text;});var c=document.getElementById('ga4AiChart');if(c){c.parentElement.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:11px;color:#777">'+text+'</div>';}}
+function renderAiKpis(){var left=document.querySelectorAll('.ai-col:first-child .rpt-kpi');if(ai.ga4Trend.length&&left.length){var t=ai.ga4Trend.slice().sort(function(a,b){return monthIndex(a.month)-monthIndex(b.month);});var cur=t[t.length-1],prev=t[t.length-2]||{};var top=ai.llm[0]||{};left[0].querySelector('.n').textContent=fmt(cur.sessions);left[0].querySelector('.kpi-sub').textContent='All LLMs · '+cur.month;var gm=left[0].querySelector('.delta-row .val');gm.textContent=dText(delta(num(cur.sessions),num(prev.sessions)));gm.classList.remove('up','down');gm.classList.add(dClass(delta(num(cur.sessions),num(prev.sessions))));left[1].querySelector('.n').textContent=pct(top.share_pct);left[1].querySelector('.kpi-sub').textContent=fmt(top.sessions)+' of '+fmt(cur.sessions)+' sessions';var er=left[1].querySelector('.delta-row .val');er.textContent=pct(top.engaged_rate);er.classList.remove('up','down');er.classList.add('up');}
+  if(ai.bingTrend.length){var bt=ai.bingTrend.slice().sort(function(a,b){return monthIndex(a.month)-monthIndex(b.month);});var bcur=bt[bt.length-1],bprev=bt[bt.length-2]||{};var cards=document.querySelectorAll('.ai-col:nth-child(2) .rpt-kpi');if(cards[0]){cards[0].querySelector('.n').textContent=fmt(bcur.citations);cards[0].querySelector('.kpi-sub').textContent=bcur.month+' citations';cards[0].querySelector('.delta-row .val').textContent=(num(bcur.citations)/30).toFixed(0);}if(cards[1]){cards[1].querySelector('.n').textContent=fmt(bcur.cited_pages||ai.bingPages.length);cards[1].querySelector('.kpi-sub').textContent=bcur.month+' cited pages';var v=delta(num(bcur.citations),num(bprev.citations));var el=cards[1].querySelector('.delta-row .val');el.textContent=dText(v);el.classList.remove('up','down');el.classList.add(dClass(v));}}}
+function renderAiTables(type){var cfg={ga4:['data/aisearch-ga4-pages.csv',ai.ga4Pages,'page','sessions','ga4-see-more',3],bing:['data/aisearch-bing-pages.csv',ai.bingPages,'page','citations','bing-see-more',3],bingq:['data/aisearch-bing-queries.csv',ai.bingQueries,'query','citations','bingq-see-more',3]}[type];var tb=document.querySelector('[data-csv-table="'+cfg[0]+'"]');if(!tb)return;var rows=cfg[1];if(!rows.length){tb.innerHTML='<tr><td colspan="'+cfg[5]+'">'+msg(cfg[0])+'</td></tr>';return;}tb.innerHTML=rows.slice(0,ai.visible[type]).map(function(r,i){return'<tr><td class="rn">'+(i+1)+'</td><td class="pg">'+esc(type==='bingq'?r[cfg[2]]:pathLabel(r[cfg[2]]))+'</td><td class="r">'+fmt(r[cfg[3]])+'</td></tr>';}).join('');var btn=document.getElementById(cfg[4]);if(btn){btn.style.display=rows.length>ai.visible[type]?'inline-block':'none';btn.textContent=type==='bingq'?'▼ See 5 more queries':'▼ See 10 more pages';}}
+function toggleAiTable(type){ai.visible[type]+=(type==='bingq'?5:10);renderAiTables(type);}
+async function initAi(){var g=await loadCSV('data/aisearch-ga4-trend.csv'),ll=await loadCSV('data/aisearch-llm-sources.csv'),gp=await loadCSV('data/aisearch-ga4-pages.csv'),bt=await loadCSV('data/aisearch-bing-trend.csv'),bp=await loadCSV('data/aisearch-bing-pages.csv'),bq=await loadCSV('data/aisearch-bing-queries.csv');ai.ga4Trend=g?g.rows:[];ai.llm=ll?ll.rows.sort(function(a,b){return num(b.sessions)-num(a.sessions);}):[];ai.ga4Pages=gp?gp.rows.sort(function(a,b){return num(b.sessions)-num(a.sessions);}):[];ai.bingTrend=bt?bt.rows:[];ai.bingPages=bp?bp.rows.sort(function(a,b){return num(b.citations)-num(a.citations);}):[];ai.bingQueries=bq?bq.rows.sort(function(a,b){return num(b.citations)-num(a.citations);}):[];if(ai.ga4Trend.length)drawGa4AiChart();else setGa4Missing();drawDonut();if(ai.bingTrend.length)drawLine('bingAiChart',ai.bingTrend,'month','citations','Citations','#0078d4');renderAiKpis();renderAiTables('ga4');renderAiTables('bing');renderAiTables('bingq');}
+window.addEventListener('load',initAi);
+</script>
+</body>
+</html>

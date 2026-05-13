@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DTF Printer USA - Backlinks Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../reports-shared/assets/style.css">
+<script src="../../reports-shared/assets/scale.js"></script>
+<style>
+:root{--page-accent:#0f766e;--page-accent-soft:rgba(15,118,110,.10)}
+body:has(.page-nav) .wrap{padding-top:8px;padding-bottom:10px}
+
+/* ── KPI row ── */
+.bl-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}
+.bl-kpi-row .rpt-kpi{padding:8px 12px}
+.bl-kpi-row .rpt-kpi .l{font-size:9px;margin-bottom:2px}
+.bl-kpi-row .rpt-kpi .n{font-size:22px;line-height:1}
+.bl-kpi-row .rpt-kpi .kpi-sub{font-size:9px;color:var(--muted-2)}
+.bl-approval-note{background:var(--page-accent-soft);border-left:3px solid var(--page-accent);border-radius:6px;padding:7px 10px;margin:0 0 8px;font-size:10.5px;color:var(--ink-2);font-weight:600}
+
+/* ── 3-col layout - stretch so all panels equal height ── */
+.bl-layout{display:grid;grid-template-columns:4fr 3fr 2fr;gap:8px;align-items:stretch}
+.bl-col{display:flex;flex-direction:column;min-width:0}
+
+/* ── Panel - single panel per col, fills full height ── */
+.bl-panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px;display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+.bl-panel-title{font-size:11px;font-weight:700;color:var(--ink);text-transform:uppercase;letter-spacing:.5px;background:var(--page-accent-soft);border-radius:6px;padding:5px 7px}
+.bl-panel-divider{border:none;border-top:1px solid var(--line);margin:4px 0}
+
+/* ── Tables ── */
+.bl-tbl{width:100%;border-collapse:collapse;table-layout:fixed}
+.bl-tbl th{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:var(--muted);padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}
+.bl-tbl th:first-child{text-align:left}
+.bl-tbl td{font-size:10px;padding:4px 6px;border-bottom:1px solid var(--line-soft);color:var(--ink-2)}
+.bl-tbl td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}
+.bl-tbl td.feat{font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bl-tbl td.note{text-align:left;font-size:9.5px;color:var(--muted)}
+.bl-tbl tr:has(.q-high) td{background:rgba(0,146,71,.04)}
+.bl-tbl tr:has(.q-mid) td{background:rgba(242,140,40,.04)}
+.bl-tbl tr:has(.q-low) td,.bl-tbl tr:has(.q-spam) td{background:rgba(192,57,43,.04)}
+/* tier table */
+.bl-tbl col.c-tier{width:36%}
+.bl-tbl col.c-rd{width:18%}
+.bl-tbl col.c-bl{width:16%}
+.bl-tbl col.c-sp{width:14%}
+.bl-tbl col.c-q{width:16%}
+/* domains table */
+.bl-tbl col.c-dom{width:44%}
+.bl-tbl col.c-dr{width:12%}
+.bl-tbl col.c-links{width:12%}
+.bl-tbl col.c-spm{width:10%}
+.bl-tbl col.c-ass{width:22%}
+
+/* ── Quality chips ── */
+.q-chip{display:inline-block;font-size:8px;font-weight:700;padding:1px 6px;border-radius:8px;text-transform:uppercase;letter-spacing:.2px;white-space:nowrap}
+.q-high{background:rgba(34,197,94,.12);color:#16a34a}
+.q-mid{background:rgba(234,179,8,.12);color:#b45309}
+.q-low{background:rgba(239,68,68,.12);color:#dc2626}
+.q-spam{background:rgba(239,68,68,.18);color:#991b1b}
+
+/* ── Anchor bars ── */
+.anc-rows{display:flex;flex-direction:column;gap:5px}
+.anc-row{display:flex;flex-direction:column;gap:2px}
+.anc-label{font-size:9px;color:var(--ink-2);display:flex;justify-content:space-between}
+.anc-label span{color:var(--muted);font-size:8.5px}
+.anc-bar-bg{background:var(--line-soft);border-radius:3px;height:5px;overflow:hidden}
+.anc-bar{height:5px;border-radius:3px;background:var(--page-accent)}
+.anc-bar.warn{background:#f59e0b}
+
+/* ── Text ── */
+.bl-ins-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.bl-ins-body{font-size:10px;color:var(--ink-2);line-height:1.55}
+.bl-ins-body strong{color:var(--ink)}
+
+/* ── Stat row ── */
+.bl-stat-row{display:flex;gap:10px;flex-wrap:wrap}
+.bl-stat{font-size:9px;color:var(--muted)}
+.bl-stat strong{font-size:13px;font-weight:800;color:var(--ink);display:block;font-family:'Montserrat',sans-serif;line-height:1}
+
+/* ── See more ── */
+.bl-extra{display:none}
+.bl-see-more{background:none;border:none;font-size:10px;color:var(--page-accent);font-weight:700;cursor:pointer;padding:4px 0 0;font-family:inherit}
+.bl-see-more:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<script src="../../reports-shared/components/_pages.js"></script>
+<script>
+(function(){
+  var pages=(window.REPORT_PAGES||[]);
+  var nav=document.createElement('nav');
+  nav.className='page-nav';
+  nav.innerHTML='<div class="nav-left"><span class="nav-page-title">Backlinks</span></div>'+
+    '<div class="nav-links">'+
+    pages.map(function(p){
+      return '<a href="'+p.href+'" class="nav-btn'+(p.id==='backlinks'?' active':'')+'">'+(p.id==='index'?'Cover':p.label)+'</a>';
+    }).join('')+'</div>';
+  document.body.insertBefore(nav,document.currentScript);
+})();
+</script>
+<script>
+if(window.Chart&&window.ChartDataLabels)Chart.register(ChartDataLabels);
+function parseCSV(text){
+  text=String(text||'').replace(/^\uFEFF/,'');
+  var rows=[],row=[],field='',inQ=false;
+  for(var i=0;i<text.length;i++){var c=text[i];
+    if(inQ){if(c==='"'){if(text[i+1]==='"'){field+='"';i++;}else{inQ=false;}}else{field+=c;}}
+    else{if(c==='"'){inQ=true;}else if(c===','){row.push(field);field='';}
+      else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);field='';if(row.length>1||row[0]!=='')rows.push(row);row=[];}
+      else{field+=c;}}
+  }
+  if(field!==''||row.length){row.push(field);rows.push(row);}
+  if(!rows.length)return{headers:[],rows:[]};
+  var h=rows.shift().map(function(x){return x.trim();});
+  return{headers:h,rows:rows.map(function(r){var o={};h.forEach(function(k,i){o[k]=r[i]!=null?r[i]:'';});return o;})};
+}
+async function loadCSV(p){try{var r=await fetch(p,{cache:'no-store'});if(!r.ok)throw new Error(r.status);var parsed=parseCSV(await r.text());return parsed.rows.length?parsed:null;}catch(e){return null;}}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function num(v){return Number(String(v==null?'':v).replace(/[^0-9.-]/g,''))||0;}
+function fmt(v){v=num(v);return v.toLocaleString('en-US',{maximumFractionDigits:0});}
+function pct(v){return (num(v)).toFixed(1)+'%';}
+function delta(cur,prev){if(!prev)return null;return (cur-prev)/prev*100;}
+function dText(v){if(v===null||!isFinite(v))return '—';return (v>=0?'+':'')+v.toFixed(1)+'%';}
+function dClass(v){return v===null||!isFinite(v)?'':(v>=0?'up':'down');}
+function msg(file){return 'Report data is unavailable.';}
+function setText(id,value){var el=document.getElementById(id);if(el)el.textContent=value;}
+function setDelta(id,value){var el=document.getElementById(id);if(!el)return;el.textContent=dText(value);el.classList.remove('up','down','placeholder');var cls=dClass(value);if(cls)el.classList.add(cls);}
+function monthIndex(label){var m={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};var p=String(label||'').trim().split(/\s+/);return (Number(p[p.length-1])||0)*12+(m[String(p[0]||'').slice(0,3).toLowerCase()]||0);}
+function pathLabel(p){p=String(p||'');try{var u=new URL(p);p=u.pathname||'/';}catch(e){}return p||'/';}
+
+var bl={summary:[],newLinks:[],domains:[],tiers:[],anchors:[],targets:[],churn:[],visible:{domains:8,newLinks:12}};
+function metric(name){var r=bl.summary.find(function(x){return String(x.metric||'').toLowerCase()===name.toLowerCase();});return r?r.value:'—';}
+function renderBlKpis(){var row=document.querySelector('.bl-kpi-row');if(row&&row.children.length<4){row.insertAdjacentHTML('beforeend','<div class="rpt-kpi"><div class="l">Dofollow Links</div><div class="n">—</div><div class="kpi-sub"></div></div>');}var cards=document.querySelectorAll('.bl-kpi-row .rpt-kpi');var vals=[['Live Backlinks',metric('Live Backlinks')],['Referring Domains',metric('Referring Domains')],['New - April 2026',bl.newLinks.length],['Dofollow Links',metric('Dofollow Links')]];cards.forEach(function(c,i){if(vals[i]){c.querySelector('.l').textContent=vals[i][0];c.querySelector('.n').textContent=fmt(vals[i][1]);}});}
+function renderTier(){var tb=document.querySelector('[data-csv-table="data/backlinks-tiers.csv"]');if(!tb)return;if(!bl.tiers.length){tb.innerHTML='<tr><td colspan="5">'+msg('data/backlinks-tiers.csv')+'</td></tr>';return;}tb.innerHTML=bl.tiers.map(function(r){return'<tr><td>'+esc(r.tier)+'</td><td>'+fmt(r.ref_domains)+'</td><td>'+fmt(r.backlinks)+'</td><td>'+esc(r.spam_pct)+'%</td><td style="text-align:left"><span class="q-chip">'+esc(r.quality)+'</span></td></tr>';}).join('');}
+
+function renderTierStats(){var total=bl.tiers.reduce(function(a,r){return a+num(r.backlinks);},0)||1;var high=bl.tiers.filter(function(r){return r.tier==='DR 70+';}).reduce(function(a,r){return a+num(r.backlinks);},0);var low=bl.tiers.filter(function(r){return r.tier==='DR <30';}).reduce(function(a,r){return a+num(r.backlinks);},0);setText('blTierLive',(high*100/total).toFixed(0)+'%');setText('blTierReview',(low*100/total).toFixed(0)+'%');}
+function renderDomains(){var tb=document.querySelector('[data-csv-table="data/refdomains.csv"]');if(!tb)return;if(!bl.domains.length){tb.innerHTML='<tr><td colspan="5">'+msg('data/refdomains.csv')+'</td></tr>';return;}tb.innerHTML=bl.domains.slice(0,bl.visible.domains).map(function(r){return'<tr><td>'+esc(r.domain)+'</td><td>'+fmt(r.dr)+'</td><td>'+fmt(r.links)+'</td><td>—</td><td style="text-align:left">Live</td></tr>';}).join('');var btn=document.getElementById('blDomainToggle');if(btn){btn.style.display=bl.domains.length>bl.visible.domains?'inline-block':'none';btn.textContent='See All Domains ▼';}}
+function renderNewLinks(){var tb=document.querySelector('[data-csv-table="data/backlinks-new.csv"]');if(!tb)return;if(!bl.newLinks.length){tb.innerHTML='<tr><td colspan="5">'+msg('data/backlinks-new.csv')+'</td></tr>';return;}tb.innerHTML=bl.newLinks.slice(0,bl.visible.newLinks).map(function(r){return'<tr><td>'+esc(r.date||'—')+'</td><td>'+esc(pathLabel(r.referring_url))+'</td><td>'+esc(pathLabel(r.target_url))+'</td><td>'+fmt(r.dr)+'</td><td>'+esc(r.type||r.status||'Live')+'</td></tr>';}).join('');}
+function renderAnchor(){var box=document.getElementById('blAnchorRows');if(!box)return;if(!bl.anchors.length){box.innerHTML='<div class="bl-ins-body">'+msg('data/backlinks-anchor.csv')+'</div>';return;}var max=num(bl.anchors[0].count)||1;box.innerHTML=bl.anchors.slice(0,8).map(function(r,i){return'<div class="anc-row"><div class="anc-label">'+esc(r.anchor)+' <span>'+fmt(r.count)+' ('+esc(r.share_pct)+'%)</span></div><div class="anc-bar-bg"><div class="anc-bar '+(i<2?'warn':'')+'" style="width:'+Math.max(4,num(r.count)*100/max)+'%"></div></div></div>';}).join('');}
+function renderTargets(){var box=document.getElementById('blTargetsBody');if(!box)return;if(!bl.targets.length){box.innerHTML=msg('data/backlinks-targets.csv');return;}box.innerHTML=bl.targets.slice(0,5).map(function(r){return'<strong>'+esc(r.target)+'</strong> - '+fmt(r.live)+' live / '+fmt(r.lost)+' lost';}).join('<br>');}
+function renderChurn(){var box=document.getElementById('blChurnBody');if(!box)return;if(!bl.churn.length){box.innerHTML=msg('data/backlinks-churn.csv');return;}box.innerHTML=bl.churn.map(function(r){return'<strong>'+esc(r.metric)+': '+esc(r.value)+'.</strong> '+esc(r.note);}).join('<br>');}
+function toggleBlDomains(){bl.visible.domains=bl.domains.length;renderDomains();}
+function blTab(btn,id){var panel=btn&&btn.closest('.bl-panel');if(!panel)return;panel.querySelectorAll('.bl-tab').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');panel.querySelectorAll('.bl-pane').forEach(function(p){p.classList.toggle('on',p.id===id);});}
+async function initBacklinks(){var s=await loadCSV('data/backlinks-summary.csv'),n=await loadCSV('data/backlinks-new.csv'),d=await loadCSV('data/refdomains.csv'),t=await loadCSV('data/backlinks-tiers.csv'),a=await loadCSV('data/backlinks-anchor.csv'),ta=await loadCSV('data/backlinks-targets.csv'),c=await loadCSV('data/backlinks-churn.csv');bl.summary=s?s.rows:[];bl.newLinks=n?n.rows:[];bl.domains=d?d.rows.sort(function(a,b){return num(b.dr)-num(a.dr)||num(b.links)-num(a.links);}):[];bl.tiers=t?t.rows:[];bl.anchors=a?a.rows:[];bl.targets=ta?ta.rows:[];bl.churn=c?c.rows:[];renderBlKpis();renderTier();renderTierStats();renderDomains();renderNewLinks();renderAnchor();renderTargets();renderChurn();}
+window.addEventListener('load',initBacklinks);
+</script>
+<div class="wrap">
+<div class="source-strip"><span>Source: Ahrefs Backlinks</span><span></span></div>
+<div class="bl-approval-note"></div>
+
+<!-- ── 4-KPI single row ── -->
+<div class="bl-kpi-row">
+  <div class="rpt-kpi" style="border-top:4px solid var(--accent)">
+    <div class="l">Live Backlinks</div>
+    <div class="n">—</div>
+    <div class="kpi-sub"></div>
+  </div>
+  <div class="rpt-kpi">
+    <div class="l">Domain Rating</div>
+    <div class="n">—</div>
+    <div class="kpi-sub"></div>
+  </div>
+  <div class="rpt-kpi">
+    <div class="l">New - April 2026</div>
+    <div class="n">—</div>
+    <div class="kpi-sub"></div>
+  </div>
+</div>
+
+<!-- ── 3-col layout - one panel per col ── -->
+<div class="bl-layout">
+
+  <!-- COL 1 - Authority Tier + Referring Domains (single panel) -->
+  <div class="bl-col">
+    <div class="bl-panel">
+
+      <div class="bl-panel-title">Profile by Authority Tier</div>
+      <table class="bl-tbl">
+        <colgroup>
+          <col class="c-tier"><col class="c-rd"><col class="c-bl"><col class="c-sp"><col class="c-q">
+        </colgroup>
+        <thead>
+          <tr><th>Tier</th><th>Ref. Domains</th><th>Backlinks</th><th>Spam %</th><th style="text-align:left">Quality</th></tr>
+        </thead>
+        <tbody data-csv-table="data/backlinks-tiers.csv">
+          <tr><td colspan="20">Loading data…</td></tr>
+        </tbody>
+      </table>
+      <div class="bl-stat-row">
+        <div class="bl-stat"><strong id="blTierLive">—</strong>live backlinks in the strongest tier</div>
+        <div class="bl-stat"><strong id="blTierReview">—</strong>links in DR &lt;30 tier</div>
+      </div>
+
+      <hr class="bl-panel-divider">
+
+      <div class="bl-panel-title">Top Referring Domains</div>
+      <table class="bl-tbl">
+        <colgroup>
+          <col class="c-dom"><col class="c-dr"><col class="c-links"><col class="c-spm"><col class="c-ass">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Domain</th>
+            <th>DR<sup class="ah">*</sup></th>
+            <th>Links</th>
+            <th>Spam</th>
+            <th style="text-align:left">Type</th>
+          </tr>
+        </thead>
+        <tbody data-csv-table="data/refdomains.csv">
+          <tr><td colspan="20">Loading data…</td></tr>
+        </tbody>
+      </table>
+      <button class="bl-see-more" id="blDomainToggle" onclick="toggleBlDomains()" style="display:none">See All Domains ▼</button>
+
+    </div>
+  </div>
+
+  <!-- COL 2 - Anchor text distribution (single panel) -->
+  <div class="bl-col">
+    <div class="bl-panel">
+      <div class="bl-panel-title">Anchor Text Distribution</div>
+      <div style="font-size:9px;color:var(--muted);font-style:italic">Live backlinks - top anchors by count</div>
+      <div class="anc-rows" id="blAnchorRows">
+        <div class="bl-ins-body">Loading data…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COL 3 - Link targets + Churn context (single panel) -->
+  <div class="bl-col">
+    <div class="bl-panel">
+      <div class="bl-ins-title">Link Targets</div>
+      <div class="bl-ins-body" id="blTargetsBody">Loading data…</div>
+
+      <hr class="bl-panel-divider">
+
+      <div class="bl-ins-title">Link Churn Context</div>
+      <div class="bl-ins-body" id="blChurnBody">Loading data…</div>
+    </div>
+  </div>
+
+</div><!-- /bl-layout -->
+</div><!-- /wrap -->
+</body>
+</html>

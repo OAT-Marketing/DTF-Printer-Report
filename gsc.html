@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DTF Printer USA - GSC</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../reports-shared/assets/style.css">
+<script src="../../reports-shared/assets/scale.js"></script>
+<style>
+:root{--page-accent:#F28C28;--page-accent-soft:rgba(242,140,40,.10)}
+body:has(.page-nav) .wrap{padding-top:8px;padding-bottom:10px}
+
+/* KPI styles live in style.css (.rpt-kpi-grid + .rpt-kpi) */
+
+/* ── Filter strip ── */
+.gsc-filter-strip{display:flex;align-items:center;gap:6px;margin-bottom:10px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px;flex-wrap:wrap}
+.fstrip-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);flex-shrink:0;margin-right:4px}
+.ft-chip{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;cursor:pointer;background:var(--surface);border:1px solid var(--line);font-family:inherit;transition:all .15s;white-space:nowrap}
+.ft-chip:hover{border-color:var(--tc,var(--page-accent));background:var(--page-accent-soft)}
+.ft-chip.active{border-color:var(--tc,var(--page-accent));background:var(--tc,var(--page-accent));color:#fff}
+.ft-chip-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;background:var(--muted-2)}
+.ft-chip.active .ft-chip-dot{background:#fff}
+.ft-chip-name{font-size:11px;font-weight:700;color:var(--ink-2)}
+.ft-chip.active .ft-chip-name{color:#fff}
+.ft-chip-pct{font-size:10px;font-weight:600;color:var(--muted)}
+.ft-chip.active .ft-chip-pct{color:rgba(255,255,255,.8)}
+
+/* ── Row 2: Chart + Key Insights ── */
+.gsc-layout{display:flex;gap:10px;align-items:stretch}
+.gsc-main{flex:7;min-width:0;display:flex;flex-direction:column;gap:6px}
+.chart-wrap{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;background:var(--page-accent-soft);border-radius:6px;padding:6px 8px}
+.chart-title{font-size:13px;font-weight:700;color:var(--ink)}
+.chart-canvas-box{position:relative;height:210px;flex-shrink:0}
+.chart-canvas-box canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important}
+.pos-note{flex-shrink:0;font-size:10px;color:var(--muted);margin:0;font-style:italic}
+
+/* Key Insights */
+.gsc-hl-panel{flex:3;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column}
+.ki-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-shrink:0}
+.ki-icon{font-size:16px}
+.ki-header-title{font-size:13px;font-weight:700;color:var(--ink)}
+.gsc-hl-panel ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;flex:1}
+.gsc-hl-panel ul li{font-size:11.5px;line-height:1.5;color:var(--ink-2);padding-left:14px;position:relative}
+.gsc-hl-panel ul li::before{content:'';position:absolute;left:0;top:6px;width:6px;height:6px;border-radius:50%;background:var(--page-accent)}
+.gsc-hl-panel ul li strong{color:var(--ink)}
+
+/* Footer */
+.gsc-footer{margin-top:8px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted-2);padding:0 2px}
+.gsc-monthly-wrap{margin-top:10px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px;min-width:0}
+.gsc-monthly-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.gsc-monthly-title{font-size:11px;font-weight:700;color:var(--ink);text-transform:uppercase;letter-spacing:.5px;background:var(--page-accent-soft);border-radius:6px;padding:5px 7px}
+.gsc-monthly-note{font-size:9px;color:var(--muted);font-style:italic}
+.gsc-hist-tbl{width:100%;border-collapse:collapse;table-layout:fixed;font-size:9.5px}
+.gsc-hist-tbl th{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;background:var(--header-dark);color:#fff;padding:3px 4px;border-bottom:none;text-align:center;white-space:nowrap}
+.gsc-hist-tbl th:nth-child(1),.gsc-hist-tbl th:nth-child(2){text-align:left}
+.gsc-hist-month-row th{font-size:8px;font-weight:700;background:var(--header-dark);color:#fff;text-align:center!important;border-bottom:none;padding:4px 4px 3px;text-transform:uppercase;letter-spacing:.4px}
+.gsc-hist-tbl td{font-size:9px;padding:3px 4px;border-bottom:1px solid var(--line-soft);color:var(--ink-2);text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
+.gsc-hist-tbl td.hn{color:var(--muted);text-align:left;font-size:8.5px}
+.gsc-hist-tbl td.hkw{text-align:left;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gsc-hist-extra{display:none}
+.gsc-see-more{background:none;border:none;font-size:10px;color:var(--page-accent);font-weight:700;cursor:pointer;padding:4px 0 0;font-family:inherit}
+.gsc-see-more:hover{text-decoration:underline}
+.hdelta{font-weight:700}
+.hdelta.up{color:#16a34a}
+.hdelta.dn{color:#dc2626}
+.hdelta.neu{color:var(--muted)}
+/* ── Month slot colours (6-slot cycle, same palette as reference) ── */
+.ms0{background:rgba(99,102,241,.065)}
+.ms1{background:rgba(100,116,139,.045)}
+.ms2{background:rgba(249,115,22,.065)}
+.ms3{background:rgba(14,165,233,.045)}
+.ms4{background:rgba(16,185,129,.065)}
+.ms5{background:rgba(245,158,11,.075)}
+.gsc-hist-tbl th.ms0{background:#34375f}
+.gsc-hist-tbl th.ms1{background:#334155}
+.gsc-hist-tbl th.ms2{background:#5a341f}
+.gsc-hist-tbl th.ms3{background:#164e63}
+.gsc-hist-tbl th.ms4{background:#18543d}
+.gsc-hist-tbl th.ms5{background:#5f3f12}
+.ms0.ms-first{border-left:2px solid rgba(99,102,241,.25)}
+.ms1.ms-first{border-left:2px solid var(--line)}
+.ms2.ms-first{border-left:2px solid rgba(249,115,22,.25)}
+.ms3.ms-first{border-left:2px solid var(--line)}
+.ms4.ms-first{border-left:2px solid rgba(16,185,129,.25)}
+.ms5.ms-first{border-left:2px solid rgba(245,158,11,.35)}
+.m-delta{border-left:2px solid var(--line-soft)}
+</style>
+</head>
+<body>
+<script src="../../reports-shared/components/_pages.js"></script>
+<script>
+(function(){
+  var pages=(window.REPORT_PAGES||[]);
+  var nav=document.createElement('nav');
+  nav.className='page-nav';
+  nav.innerHTML='<div class="nav-left"><span class="nav-page-title">GSC</span></div>'+
+    '<div class="nav-links">'+
+    pages.map(function(p){
+      return '<a href="'+p.href+'" class="nav-btn'+(p.id==='gsc'?' active':'')+'">'+(p.id==='index'?'Cover':p.label)+'</a>';
+    }).join('')+'</div>';
+  document.body.insertBefore(nav,document.currentScript);
+})();
+</script>
+<div class="wrap">
+
+<!-- Row 1: KPIs -->
+<div class="rpt-kpi-grid">
+    <div class="rpt-kpi">
+      <div class="l">Impressions</div><div class="n" id="gsc-kpi-impr">—</div>
+      <div class="kpi-sub">Times your pages appeared in search</div>
+      <div class="deltas">
+        <div class="delta-row"><span class="lab">MoM</span><span class="val placeholder" id="gsc-impr-mom">—</span></div>
+      </div>
+    </div>
+    <div class="rpt-kpi">
+      <div class="l">Clicks</div><div class="n" id="gsc-kpi-clicks">—</div>
+      <div class="kpi-sub">Visits from organic search results</div>
+      <div class="deltas">
+        <div class="delta-row"><span class="lab">MoM</span><span class="val placeholder" id="gsc-clicks-mom">—</span></div>
+      </div>
+    </div>
+    <div class="rpt-kpi">
+      <div class="l">Avg. Position</div><div class="n" id="gsc-kpi-pos">—</div>
+      <div class="kpi-sub">Average rank in results - lower is better</div>
+      <div class="deltas">
+        <div class="delta-row"><span class="lab">MoM</span><span class="val placeholder" id="gsc-pos-mom">—</span></div>
+      </div>
+    </div>
+    <div class="rpt-kpi">
+      <div class="l">Site CTR</div><div class="n warn" id="gsc-kpi-ctr">—</div>
+      <div class="kpi-sub">Share of impressions that became clicks</div>
+      <div class="deltas">
+        <div class="delta-row"><span class="lab">MoM</span><span class="val placeholder" id="gsc-ctr-mom">—</span></div>
+      </div>
+    </div>
+</div><!-- /gsc-kpis -->
+
+<!-- Row 2: Filter strip (multi-select) -->
+<div class="gsc-filter-strip" id="gsc-filter-strip">
+  <span class="fstrip-label">Filter by page type</span>
+  <button class="ft-chip active" onclick="toggleTypeFilter('all',this)" data-ft="all">
+    <span class="ft-chip-dot"></span><span class="ft-chip-name">All</span>
+  </button>
+</div>
+
+<!-- Row 3: Chart + Key Insights -->
+<div class="gsc-layout">
+  <div class="gsc-main">
+    <div class="chart-wrap">
+      <div class="chart-header">
+        <span class="chart-title">12-Month Trend</span>
+        <div class="chart-toggles" style="margin-bottom:0">
+          <button class="chart-btn active-impr" id="btn-impr" onclick="toggleMetric('impressions')">&#9679; Impressions</button>
+          <button class="chart-btn active-clicks" id="btn-clicks" onclick="toggleMetric('clicks')">&#9679; Clicks</button>
+          <button class="chart-btn" id="btn-ctr" onclick="toggleMetric('ctr')">&#9679; CTR</button>
+          <button class="chart-btn" id="btn-pos" onclick="toggleMetric('position')">&#9679; Avg. Position</button>
+        </div>
+      </div>
+      <div class="chart-canvas-box">
+        <canvas id="gscChart"></canvas>
+      </div>
+      <p class="pos-note" id="gscChartNote">* Avg. Position axis is inverted: lower = better. Monthly trend is sitewide.</p>
+    </div>
+  </div>
+
+  <!-- Key Insights -->
+  <div class="gsc-hl-panel">
+    <div class="ki-header">
+      <span class="ki-icon">💡</span>
+      <span class="ki-header-title">Key Insights</span>
+    </div>
+    <ul id="gsc-insights"><li>Loading…</li></ul>
+  </div>
+</div><!-- /gsc-layout -->
+
+<div class="gsc-monthly-wrap">
+  <div class="gsc-monthly-head">
+    <div class="gsc-monthly-title" id="gsc-table-title">Top Pages Monthly Performance</div>
+    <div class="gsc-monthly-note">top 10 shown by default · +100 per click</div>
+  </div>
+  <table class="gsc-hist-tbl">
+    <colgroup id="gsc-colgroup"></colgroup>
+    <thead id="gsc-hist-head"></thead>
+    <tbody id="gsc-pages-body">
+      <tr><td colspan="8" class="hkw">Loading top pages…</td></tr>
+    </tbody>
+  </table>
+  <button class="gsc-see-more" id="gscPagesToggle" onclick="toggleGscPages()" style="display:none">▼ See 40 more pages</button>
+</div>
+
+<!-- Footer -->
+<div class="gsc-footer">
+  <span>Source: Google Search Console</span>
+  <span id="gsc-footer-date">—</span>
+</div>
+
+</div>
+<script>
+Chart.register(ChartDataLabels);
+
+var COLOR_IMPR='#F28C28',COLOR_CLICKS='#1A1A1A',COLOR_CTR='#009247',COLOR_POS='#7a4eb8';
+var GRID='#EFEFEF',TICK='#666666';
+var SLOT_CLS=['ms0','ms1','ms2','ms3','ms4','ms5'];
+
+var TYPE_COLORS={
+  'Homepage':'#2563eb','Collections':'#009247','Products':'#F28C28',
+  'Blogs':'#e11d48','Pages':'#0891b2','Other':'#6b7280',
+  'Ready-to-Press':'#7a4eb8','Local Pages':'#65a30d','Blank Apparel':'#d97706'
+};
+
+var gscTrend=[],typeMonthly={},gscPagesData=[],TABLE_MONTHS=[];
+var activeMetrics={impressions:true,clicks:true,ctr:false,position:false};
+var selectedTypes=new Set(['all']);
+var pagesVisible=10,STEP=100,gscChart=null;
+var gscLabels=[],gscImpr=[],gscClicks=[],gscPos=[],gscCtr=[];
+
+/* ── data parser ── */
+function parseCSV(text){
+  text=text.replace(/^﻿/,'');
+  var rows=[],row=[],field='',inQ=false;
+  for(var i=0;i<text.length;i++){
+    var c=text[i];
+    if(inQ){if(c==='"'){if(text[i+1]==='"'){field+='"';i++;}else{inQ=false;}}else{field+=c;}}
+    else{if(c==='"'){inQ=true;}else if(c===','){row.push(field);field='';}
+      else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);field='';
+        if(row.length>1||row[0]!=='')rows.push(row);row=[];}
+      else{field+=c;}}
+  }
+  if(field!==''||row.length){row.push(field);rows.push(row);}
+  if(!rows.length)return{headers:[],rows:[]};
+  var h=rows.shift().map(function(x){return x.trim();});
+  return{headers:h,rows:rows.map(function(r){var o={};h.forEach(function(k,i){o[k]=r[i]!=null?r[i]:'';});return o;})};
+}
+async function loadCSV(p){
+  try{var r=await fetch(p,{cache:'no-store'});if(!r.ok)throw new Error(r.status);return parseCSV(await r.text());}
+  catch(e){console.warn('[gsc] failed',p,e.message);return null;}
+}
+
+/* ── Formatters ── */
+function n(v){return parseFloat(v)||0;}
+function fmt(v){v=n(v);return v>=1000?Math.round(v/1000)+'K':String(Math.round(v));}
+function fmtInt(v){v=n(v);return Number.isFinite(v)?String(Math.round(v)):'-';}
+function fmtPos(v){v=n(v);return v?v.toFixed(1):'-';}
+function pctStr(v){return(v>=0?'+':'')+v.toFixed(1)+'%';}
+function ppStr(v){return(v>=0?'+':'')+v.toFixed(2)+'pp';}
+function escHtml(s){return String(s||'').replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+function setDelta(id,v){
+  var el=document.getElementById(id);if(!el)return;
+  el.classList.remove('up','down','placeholder');
+  if(!v||v==='-'||v==='—'){el.textContent='-';el.classList.add('placeholder');return;}
+  var nv=parseFloat(v);
+  var isPos=(id.indexOf('-pos-')>-1)?nv<0:nv>=0;
+  el.classList.add(isPos?'up':'down');
+  el.textContent=v;
+}
+
+/* ── Init ── */
+async function init(){
+  var results=await Promise.all([
+    loadCSV('data/gsc-trend.csv'),
+    loadCSV('data/gsc-by-pagetype.csv'),
+    loadCSV('data/gsc-pages.csv'),
+    loadCSV('data/gsc-pages-monthly.csv')
+  ]);
+  var trend=results[0],byType=results[1],pagesAgg=results[2],pagesMo=results[3];
+  if(!trend||!trend.rows.length){
+    document.getElementById('gsc-kpi-impr').textContent='No data';
+    document.getElementById('gscChartNote').textContent='Trend data is unavailable.';return;
+  }
+  gscTrend=trend.rows;
+  gscTrend.forEach(function(r){
+    gscLabels.push(r.month);gscImpr.push(n(r.impressions));
+    gscClicks.push(n(r.clicks));gscPos.push(n(r.avg_position));gscCtr.push(n(r.ctr_pct));
+  });
+  buildTypeMonthly(byType);
+  buildKPIs();
+  buildFilterChips(pagesAgg);
+  buildChart();
+  buildInsights();
+  buildPagesTable(pagesMo||pagesAgg);
+  var latest=gscTrend[gscTrend.length-1];
+  document.getElementById('gsc-footer-date').textContent='Last updated: '+(latest?latest.month:'—');
+}
+
+function buildTypeMonthly(csv){
+  if(!csv||!csv.rows.length)return;
+  var len=gscTrend.length;
+  csv.rows.forEach(function(r){
+    var pt=r.page_type;
+    if(!typeMonthly[pt])typeMonthly[pt]={impr:[],clicks:[],pos:[],ctr:[]};
+    var idx=gscTrend.findIndex(function(t){return t.year_month===r.year_month;});
+    if(idx<0)return;
+    typeMonthly[pt].impr[idx]=n(r.impressions);typeMonthly[pt].clicks[idx]=n(r.clicks);
+    typeMonthly[pt].pos[idx]=n(r.avg_position);typeMonthly[pt].ctr[idx]=n(r.ctr_pct);
+  });
+  Object.keys(typeMonthly).forEach(function(pt){
+    for(var i=0;i<len;i++){
+      if(typeMonthly[pt].impr[i]==null)typeMonthly[pt].impr[i]=0;
+      if(typeMonthly[pt].clicks[i]==null)typeMonthly[pt].clicks[i]=0;
+      if(typeMonthly[pt].pos[i]==null)typeMonthly[pt].pos[i]=0;
+      if(typeMonthly[pt].ctr[i]==null)typeMonthly[pt].ctr[i]=0;
+    }
+  });
+}
+
+function buildKPIs(){
+  var len=gscTrend.length;if(!len)return;
+  var cur=gscTrend[len-1],prev=len>=2?gscTrend[len-2]:null;
+  var impr=n(cur.impressions),clk=n(cur.clicks),pos=n(cur.avg_position),ctr=n(cur.ctr_pct);
+  document.getElementById('gsc-kpi-impr').textContent=impr>=1000?Math.round(impr/1000)+'K':String(Math.round(impr));
+  document.getElementById('gsc-kpi-clicks').textContent=clk.toLocaleString();
+  document.getElementById('gsc-kpi-pos').textContent=pos.toFixed(2);
+  document.getElementById('gsc-kpi-ctr').textContent=ctr.toFixed(2)+'%';
+  if(prev){
+    var pi=n(prev.impressions),pc=n(prev.clicks),pp=n(prev.avg_position),pt=n(prev.ctr_pct);
+    setDelta('gsc-impr-mom',pi?(pctStr((impr-pi)/pi*100)):null);
+    setDelta('gsc-clicks-mom',pc?(pctStr((clk-pc)/pc*100)):null);
+    setDelta('gsc-pos-mom',(pos-pp).toFixed(2));
+    setDelta('gsc-ctr-mom',ppStr(ctr-pt));
+  }
+}
+
+function buildFilterChips(pagesAgg){
+  if(!pagesAgg||!pagesAgg.rows.length)return;
+  var strip=document.getElementById('gsc-filter-strip');
+  var typeClicks={},total=0;
+  pagesAgg.rows.forEach(function(r){
+    var pt=r.page_type||'Other';
+    typeClicks[pt]=(typeClicks[pt]||0)+n(r.clicks);total+=n(r.clicks);
+  });
+  Object.keys(typeClicks).sort(function(a,b){return typeClicks[b]-typeClicks[a];}).forEach(function(pt){
+    var pct=total?Math.round(typeClicks[pt]/total*1000)/10:0;
+    var c=TYPE_COLORS[pt]||'#888';
+    var key=pt.toLowerCase().replace(/\s+/g,'-');
+    var btn=document.createElement('button');
+    btn.className='ft-chip';btn.dataset.ft=key;btn.dataset.ptOriginal=pt;
+    btn.style.setProperty('--tc',c);
+    btn.onclick=function(){toggleTypeFilter(key,this);};
+    btn.innerHTML='<span class="ft-chip-dot" style="background:'+c+'"></span>'+
+      '<span class="ft-chip-name">'+escHtml(pt)+'</span>'+
+      '<span class="ft-chip-pct">'+pct+'%</span>';
+    strip.appendChild(btn);
+  });
+}
+
+var dlBase={display:function(ctx){return!ctx.dataset.hidden;},font:{size:10,weight:'700'},anchor:'end',align:'top',offset:2,
+  formatter:function(v,ctx){var l=ctx.dataset.label||'';
+    if(l.indexOf('Impressions')===0)return v>=1000?Math.round(v/1000)+'K':(v||'');
+    if(l.indexOf('Avg. Position')===0)return v>0?v.toFixed(1):'';
+    if(l.indexOf('CTR')===0)return v>0?v.toFixed(2)+'%':'';
+    return v>0?v.toLocaleString():'';
+  }
+};
+
+function buildChart(){
+  gscChart=new Chart(document.getElementById('gscChart'),{type:'line',data:{labels:gscLabels,datasets:[
+    {label:'Impressions',data:gscImpr,borderColor:COLOR_IMPR,backgroundColor:'rgba(242,140,40,0.10)',borderWidth:2.5,pointRadius:3,tension:0.3,yAxisID:'yImprClicks',hidden:false,datalabels:Object.assign({},dlBase,{color:COLOR_IMPR})},
+    {label:'Clicks',data:gscClicks,borderColor:COLOR_CLICKS,backgroundColor:'rgba(26,26,26,0.05)',borderWidth:2,pointRadius:3,tension:0.3,yAxisID:'yImprClicks',hidden:false,datalabels:Object.assign({},dlBase,{color:COLOR_CLICKS})},
+    {label:'CTR',data:gscCtr,borderColor:COLOR_CTR,backgroundColor:'rgba(0,146,71,0.07)',borderWidth:2,pointRadius:3,tension:0.3,yAxisID:'yCtr',hidden:true,datalabels:Object.assign({},dlBase,{color:COLOR_CTR})},
+    {label:'Avg. Position',data:gscPos,borderColor:COLOR_POS,backgroundColor:'rgba(122,78,184,0.07)',borderWidth:2,pointRadius:3,tension:0.3,yAxisID:'yPos',hidden:true,datalabels:Object.assign({},dlBase,{color:COLOR_POS,formatter:function(v){return v>0?v.toFixed(1):''}})}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},
+      tooltip:{backgroundColor:'#fff',borderColor:'#D9D9D9',borderWidth:1,titleColor:'#1A1A1A',bodyColor:'#2B2B2B',
+        callbacks:{label:function(c){if(c.raw===0&&!selectedTypes.has('all'))return null;if(c.dataset.label.indexOf('Avg. Position')===0)return' Pos: '+c.raw.toFixed(1);if(c.dataset.label.indexOf('CTR')===0)return' CTR: '+c.raw.toFixed(2)+'%';if(c.dataset.label.indexOf('Impressions')===0)return' Impr: '+c.raw.toLocaleString();return' '+c.dataset.label.split(' -')[0]+': '+c.raw.toLocaleString();}}},
+      datalabels:dlBase},
+    scales:{x:{grid:{color:GRID},ticks:{color:TICK,font:{size:11}}},
+      yImprClicks:{type:'linear',position:'left',grid:{color:GRID},ticks:{color:TICK,font:{size:11},callback:function(v){return v>=1000?Math.round(v/1000)+'K':v}},display:true},
+      yCtr:{type:'linear',position:'right',grid:{drawOnChartArea:false},ticks:{color:COLOR_CTR,font:{size:11},callback:function(v){return v+'%'}},display:false},
+      yPos:{type:'linear',position:'right',reverse:true,grid:{drawOnChartArea:false},ticks:{color:COLOR_POS,font:{size:11}},display:false,min:0}
+    }
+  }});
+}
+
+function buildInsights(){
+  var len=gscTrend.length;if(!len)return;
+  var cur=gscTrend[len-1],yoy=len>=13?gscTrend[len-13]:null,prev=len>=2?gscTrend[len-2]:null;
+  var items=[];
+  if(yoy){
+    var dPos=n(cur.avg_position)-n(yoy.avg_position);
+    var dCtr=n(cur.ctr_pct)-n(yoy.ctr_pct);
+    if(n(cur.avg_position))items.push('<strong>Avg. position '+(dPos<0?'improved':'dropped')+' '+Math.abs(dPos).toFixed(1)+' spots YoY:</strong> '+n(cur.avg_position).toFixed(2)+' vs '+n(yoy.avg_position).toFixed(2)+'.'+(dPos<0?' Moving up in results.':' Lost ground.'));
+    items.push('<strong>CTR '+(dCtr>=0?'up':'down')+' to '+n(cur.ctr_pct).toFixed(2)+'%</strong> from '+n(yoy.ctr_pct).toFixed(2)+'% YoY'+(dCtr<0?': broader keyword spread pulls in more low-intent queries. Title/meta refresh on top 20 pages should recover this.':': titles and metas converting well.'));
+  }else{
+    items.push('Not enough history for YoY yet — available after 13 months of exports.');
+    if(prev){var dm=n(prev.impressions)?(n(cur.impressions)-n(prev.impressions))/n(prev.impressions)*100:null;if(dm!==null)items.push('<strong>Impressions '+(dm>=0?'+':'')+dm.toFixed(1)+'% MoM</strong> in '+cur.month+'.');}
+    items.push('Run the export monthly to build up the trend history.');
+  }
+  document.getElementById('gsc-insights').innerHTML=items.slice(0,3).map(function(t){return'<li>'+t+'</li>';}).join('');
+}
+
+function buildPagesTable(monthlyCSV){
+  var len=gscTrend.length;
+  TABLE_MONTHS=gscTrend.slice(Math.max(0,len-6)).map(function(r){return r.year_month;});
+  var mLabels=gscTrend.slice(Math.max(0,len-6)).map(function(r){return r.month;});
+  document.getElementById('gsc-table-title').textContent=
+    'Top Pages Monthly Performance - '+(mLabels[0]||'')+' → '+(mLabels[mLabels.length-1]||'');
+
+  /* colgroup — matches Dallas proportions */
+  var cg=document.getElementById('gsc-colgroup');
+  cg.innerHTML='<col style="width:2%"><col style="width:22%">'+
+    TABLE_MONTHS.map(function(){return '<col style="width:3.8%"><col style="width:3.2%"><col style="width:3.2%">';}).join('')+
+    '<col style="width:5%">';
+
+  var prevYm=TABLE_MONTHS[TABLE_MONTHS.length-2],latYm=TABLE_MONTHS[TABLE_MONTHS.length-1];
+  var lp=gscTrend.find(function(r){return r.year_month===prevYm;}),
+      ll=gscTrend.find(function(r){return r.year_month===latYm;});
+  var dLabel=(lp&&ll)?lp.month.replace(/ '.*/,'')+'→'+ll.month.replace(/ '.*/,'')+'<br>Clicks Δ':'Clicks Δ';
+
+  var h1='<tr class="gsc-hist-month-row"><th rowspan="2">#</th><th rowspan="2" style="text-align:left">Page</th>'+
+    TABLE_MONTHS.map(function(ym,i){return'<th colspan="3" class="'+SLOT_CLS[i%6]+' ms-first">'+escHtml(mLabels[i])+'</th>';}).join('')+
+    '<th rowspan="2" class="m-delta">'+dLabel+'</th></tr>';
+  var h2='<tr>'+TABLE_MONTHS.map(function(ym,i){
+    var s=SLOT_CLS[i%6];
+    return'<th class="'+s+' ms-first">Impr.</th><th class="'+s+'">Cl.</th><th class="'+s+'">Pos.</th>';
+  }).join('')+'</tr>';
+  document.getElementById('gsc-hist-head').innerHTML=h1+h2;
+
+  if(!monthlyCSV||!monthlyCSV.rows.length){
+    document.getElementById('gsc-pages-body').innerHTML=
+      '<tr><td colspan="'+(3+TABLE_MONTHS.length*3)+'" class="hkw">Page history data is unavailable.</td></tr>';
+    return;
+  }
+  var pageMap={};
+  monthlyCSV.rows.forEach(function(r){
+    var ym=r.year_month;if(TABLE_MONTHS.indexOf(ym)<0)return;
+    var url=r.page||'',path=url.replace(/^https?:\/\/[^/]+/,'')||'/';
+    if(!pageMap[path]){pageMap[path]={path:path,total:0,months:{}};TABLE_MONTHS.forEach(function(m){pageMap[path].months[m]=null;});}
+    pageMap[path].months[ym]={impr:n(r.impressions),clicks:n(r.clicks),pos:n(r.avg_position)};
+    pageMap[path].total+=n(r.clicks);
+  });
+  gscPagesData=Object.values(pageMap).sort(function(a,b){return b.total-a.total;});
+  applyGscPagesFilter();
+}
+
+function buildGscTableRows(rows){
+  return rows.map(function(r,idx){
+    var tds=['<td class="hn">'+(idx+1)+'</td>','<td class="hkw">'+escHtml(r.path)+'</td>'];
+    TABLE_MONTHS.forEach(function(ym,i){
+      var slot=SLOT_CLS[i%6],d=r.months[ym]||{};
+      tds.push('<td class="'+slot+' ms-first">'+(d.impr!=null?fmtInt(d.impr):'-')+'</td>');
+      tds.push('<td class="'+slot+'">'+(d.clicks!=null?fmtInt(d.clicks):'-')+'</td>');
+      tds.push('<td class="'+slot+'">'+(d.pos?fmtPos(d.pos):'-')+'</td>');
+    });
+    var c1=(r.months[TABLE_MONTHS[TABLE_MONTHS.length-2]]||{}).clicks;
+    var c2=(r.months[TABLE_MONTHS[TABLE_MONTHS.length-1]]||{}).clicks;
+    tds.push(deltaCell(c1,c2));
+    return'<tr>'+tds.join('')+'</tr>';
+  }).join('');
+}
+
+function applyGscPagesFilter(){
+  var body=document.getElementById('gsc-pages-body'),btn=document.getElementById('gscPagesToggle');
+  if(!body||!btn||!gscPagesData.length)return;
+  var showAll=selectedTypes.has('all')||selectedTypes.size===0;
+  var filtered=gscPagesData.filter(function(r){
+    if(showAll)return true;
+    var pt=classifyPath(r.path).toLowerCase().replace(/\s+/g,'-');
+    return selectedTypes.has(pt)||selectedTypes.has(r.page_type);
+  });
+  if(!filtered.length){
+    body.innerHTML='<tr><td colspan="'+(3+TABLE_MONTHS.length*3)+'" class="hkw">No pages for selected filter.</td></tr>';
+    btn.style.display='none';return;
+  }
+  var vis=Math.min(pagesVisible,filtered.length);
+  body.innerHTML=buildGscTableRows(filtered.slice(0,vis));
+  var rem=filtered.length-vis;
+  if(rem<=0){btn.style.display='none';}
+  else{btn.style.display='inline-block';btn.textContent='▼ See '+Math.min(STEP,rem)+' more pages';}
+}
+
+function deltaCell(a,b){
+  if(a==null||b==null)return'<td class="hdelta neu m-delta">-</td>';
+  if(a===0){if(b===0)return'<td class="hdelta neu m-delta">0%</td>';return'<td class="hdelta up m-delta">+100%</td>';}
+  var pct=(b-a)/a*100,cls=pct>0?'up':(pct<0?'dn':'neu'),sign=pct>0?'+':'';
+  return'<td class="hdelta '+cls+' m-delta">'+sign+Math.round(pct)+'%</td>';
+}
+
+function classifyPath(p){
+  p=(p||'').toLowerCase();
+  if(p==='/'||p==='')return'Homepage';
+  if(p.startsWith('/products/'))return'Products';
+  if(p.startsWith('/collections/'))return'Collections';
+  if(p.startsWith('/blogs/'))return'Blogs';
+  if(p.startsWith('/pages/'))return'Pages';
+  return'Other';
+}
+
+function toggleGscPages(){pagesVisible+=STEP;applyGscPagesFilter();}
+
+/* ── Metric toggles ── */
+var METRIC_CFG={
+  impressions:{yAxis:'yImprClicks',dash:[],    label:'Impr',  fmt:function(v){return v>=1000?Math.round(v/1000)+'K':(v?String(v):'');}},
+  clicks:     {yAxis:'yImprClicks',dash:[5,3], label:'Clicks',fmt:function(v){return v>0?v.toLocaleString():''}},
+  ctr:        {yAxis:'yCtr',       dash:[2,2], label:'CTR',   fmt:function(v){return v>0?v.toFixed(2)+'%':''}},
+  position:   {yAxis:'yPos',       dash:[8,4], label:'Pos',   fmt:function(v){return v>0?v.toFixed(1):''}}
+};
+
+function toggleMetric(metric){
+  activeMetrics[metric]=!activeMetrics[metric];
+  var bm={impressions:'btn-impr',clicks:'btn-clicks',ctr:'btn-ctr',position:'btn-pos'};
+  var cm={impressions:'active-impr',clicks:'active-clicks',ctr:'active-ctr',position:'active-pos'};
+  var btn=document.getElementById(bm[metric]);
+  activeMetrics[metric]?btn.classList.add(cm[metric]):btn.classList.remove(cm[metric]);
+  if(!selectedTypes.has('all')&&selectedTypes.size>0){switchToMultiTypeChart();}
+  else{var dm={impressions:0,clicks:1,ctr:2,position:3};gscChart.data.datasets[dm[metric]].hidden=!activeMetrics[metric];gscChart.options.scales.yPos.display=activeMetrics.position;gscChart.options.scales.yCtr.display=activeMetrics.ctr;gscChart.options.scales.yImprClicks.display=activeMetrics.impressions||activeMetrics.clicks;gscChart.update();}
+}
+
+function switchToMultiTypeChart(){
+  if(!gscChart)return;
+  var datasets=[],needIC=false,needCtr=false,needPos=false;
+  selectedTypes.forEach(function(key){
+    var btnEl=document.querySelector('[data-ft="'+key+'"]');
+    var pt=btnEl?btnEl.dataset.ptOriginal||key:key;
+    var d=typeMonthly[pt];if(!d)return;
+    var c=TYPE_COLORS[pt]||'#888';
+    ['impressions','clicks','ctr','position'].forEach(function(mk){
+      if(!activeMetrics[mk])return;
+      var cfg=METRIC_CFG[mk];
+      var arr=mk==='impressions'?d.impr:mk==='clicks'?d.clicks:mk==='position'?d.pos:d.ctr;
+      var fmtFn=cfg.fmt;
+      var dlConf={display:function(ctx){return!ctx.dataset.hidden;},font:{size:10,weight:'700'},anchor:'end',align:'top',offset:2,color:c,formatter:fmtFn};
+      datasets.push({label:pt+' · '+cfg.label,data:arr,borderColor:c,backgroundColor:c+'14',borderWidth:2,borderDash:cfg.dash,pointRadius:3,tension:0.3,yAxisID:cfg.yAxis,datalabels:dlConf});
+      if(cfg.yAxis==='yImprClicks')needIC=true;if(cfg.yAxis==='yCtr')needCtr=true;if(cfg.yAxis==='yPos')needPos=true;
+    });
+  });
+  gscChart.config.type='line';
+  gscChart.data.labels=gscLabels;
+  gscChart.data.datasets=datasets;
+  gscChart.options.scales.yImprClicks.display=needIC;
+  gscChart.options.scales.yPos.display=needPos;
+  gscChart.options.scales.yCtr.display=needCtr;
+  document.getElementById('gscChartNote').textContent='Page type comparison. Solid=Impressions, dash=Clicks, dot=CTR, long-dash=Position.';
+  gscChart.update();
+}
+
+function restoreLineChart(){
+  if(!gscChart)return;
+  gscChart.config.type='line';
+  gscChart.data.labels=gscLabels;
+  gscChart.data.datasets=[
+    {label:'Impressions',data:gscImpr,borderColor:COLOR_IMPR,backgroundColor:'rgba(242,140,40,0.10)',borderWidth:2.5,pointRadius:3,tension:0.3,yAxisID:'yImprClicks',hidden:!activeMetrics.impressions,datalabels:Object.assign({},dlBase,{color:COLOR_IMPR})},
+    {label:'Clicks',data:gscClicks,borderColor:COLOR_CLICKS,backgroundColor:'rgba(26,26,26,0.05)',borderWidth:2,pointRadius:3,tension:0.3,yAxisID:'yImprClicks',hidden:!activeMetrics.clicks,datalabels:Object.assign({},dlBase,{color:COLOR_CLICKS})},
+    {label:'CTR',data:gscCtr,borderColor:COLOR_CTR,backgroundColor:'rgba(0,146,71,0.07)',borderWidth:2,pointRadius:3,tension:0.3,yAxisID:'yCtr',hidden:!activeMetrics.ctr,datalabels:Object.assign({},dlBase,{color:COLOR_CTR})},
+    {label:'Avg. Position',data:gscPos,borderColor:COLOR_POS,backgroundColor:'rgba(122,78,184,0.07)',borderWidth:2,pointRadius:3,tension:0.3,yAxisID:'yPos',hidden:!activeMetrics.position,datalabels:Object.assign({},dlBase,{color:COLOR_POS,formatter:function(v){return v>0?v.toFixed(1):''}})}
+  ];
+  gscChart.options.scales.yImprClicks.display=activeMetrics.impressions||activeMetrics.clicks;
+  gscChart.options.scales.yPos.display=activeMetrics.position;
+  gscChart.options.scales.yCtr.display=activeMetrics.ctr;
+  document.getElementById('gscChartNote').textContent='* Avg. Position axis is inverted: lower = better. Monthly trend is sitewide.';
+  gscChart.update();
+}
+
+function toggleTypeFilter(type,chip){
+  if(type==='all'){
+    selectedTypes=new Set(['all']);
+    document.querySelectorAll('.ft-chip').forEach(function(c){c.classList.remove('active');});
+    chip.classList.add('active');
+    restoreLineChart();pagesVisible=10;applyGscPagesFilter();return;
+  }
+  if(selectedTypes.has('all')){selectedTypes.delete('all');var a=document.querySelector('[data-ft="all"]');if(a)a.classList.remove('active');}
+  if(selectedTypes.has(type)){selectedTypes.delete(type);chip.classList.remove('active');}
+  else{selectedTypes.add(type);chip.classList.add('active');}
+  if(selectedTypes.size===0){
+    selectedTypes.add('all');var a2=document.querySelector('[data-ft="all"]');if(a2)a2.classList.add('active');
+    restoreLineChart();pagesVisible=10;applyGscPagesFilter();return;
+  }
+  switchToMultiTypeChart();pagesVisible=10;applyGscPagesFilter();
+}
+
+init();
+</script>
+</body>
+</html>

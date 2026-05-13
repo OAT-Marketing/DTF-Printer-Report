@@ -1,0 +1,7 @@
+issue,count,severity
+Meta Description tag missing,17,Error
+Http 500-599 errors,3,Error
+Title too long,100,Warning
+Alt attribute for images is missing,71,Warning
+More than one h1 tag,8,Notice
+H1 tag missing,1,Notice

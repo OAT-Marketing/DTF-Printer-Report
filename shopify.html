@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DTF Printer USA - Shopify Analytics</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../reports-shared/assets/style.css">
+<script src="../../reports-shared/assets/scale.js"></script>
+<style>
+:root{--page-accent:#d97706;--page-accent-soft:rgba(217,119,6,.10)}
+body:has(.page-nav) .wrap{padding-top:8px;padding-bottom:8px}
+.source-strip{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:5px 8px;margin-bottom:8px;font-size:9px;color:var(--muted-2)}
+.shop-layout{display:flex;gap:8px;align-items:stretch}
+.shop-main{flex:7;min-width:0}
+.chart-wrap{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;gap:8px;flex-wrap:wrap;background:var(--page-accent-soft);border-radius:6px;padding:6px 8px}
+.chart-title{font-size:13px;font-weight:700;color:var(--ink)}
+.chart-canvas-box{position:relative;height:176px;flex-shrink:0}
+.chart-canvas-box canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important}
+.pos-note{flex-shrink:0;font-size:10px;color:var(--muted);margin:0;font-style:italic}
+.shop-filter-strip{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;flex-wrap:wrap;margin-bottom:2px}
+.fstrip-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);flex-shrink:0;margin-right:4px}
+.ft-chip{display:flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;cursor:pointer;background:var(--surface);border:1px solid var(--line);font-family:inherit;transition:all .15s;white-space:nowrap}
+.ft-chip:hover{border-color:var(--tc,var(--page-accent));background:var(--page-accent-soft)}
+.ft-chip.active{border-color:var(--tc,var(--page-accent));background:var(--tc,var(--page-accent));color:#fff}
+.ft-chip-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;background:var(--muted-2)}
+.ft-chip.active .ft-chip-dot{background:#fff}
+.ft-chip-name{font-size:11px;font-weight:700;color:var(--ink-2)}
+.ft-chip.active .ft-chip-name{color:#fff}
+.shop-hl-panel{flex:3;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column}
+.shop-main .chart-wrap,.shop-hl-panel{height:100%}
+.ki-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-shrink:0}
+.ki-icon{font-size:16px}
+.ki-header-title{font-size:13px;font-weight:700;color:var(--ink)}
+.shop-hl-panel ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;flex:1}
+.shop-hl-panel ul li{font-size:10.5px;line-height:1.4;color:var(--ink-2);padding-left:12px;position:relative}
+.shop-hl-panel ul li::before{content:'';position:absolute;left:0;top:6px;width:6px;height:6px;border-radius:50%;background:var(--page-accent)}
+.shop-hl-panel ul li strong{color:var(--ink)}
+.shop-bottom{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.shop-table-panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.shop-table-title{font-size:11px;font-weight:700;color:var(--ink);margin:0 0 6px;background:var(--page-accent-soft);border-radius:6px;padding:5px 7px}
+.shop-table{width:100%;border-collapse:collapse;table-layout:fixed}
+.shop-table th{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);padding:4px 6px;border-bottom:1px solid var(--line);text-align:left}
+.shop-table th.num,.shop-table td.num{text-align:right}
+.shop-table td{font-size:9.5px;color:var(--ink-2);padding:3px 6px;border-bottom:1px solid var(--line-soft)}
+.shop-table td.num{font-variant-numeric:tabular-nums;font-weight:700}
+.shop-table tr:has(.up) td{background:rgba(0,146,71,.04)}
+.shop-table tr:has(.down) td{background:rgba(192,57,43,.04)}
+.shop-table .up{color:var(--pos)}
+.shop-table .down{color:var(--neg)}
+</style>
+</head>
+<body>
+<script src="../../reports-shared/components/_pages.js"></script>
+<script>
+(function(){
+  var pages=(window.REPORT_PAGES||[]);
+  var nav=document.createElement('nav');
+  nav.className='page-nav';
+  nav.innerHTML='<div class="nav-left"><span class="nav-page-title">Shopify Analytics</span></div>'+
+    '<div class="nav-links">'+
+    pages.map(function(p){
+      return '<a href="'+p.href+'" class="nav-btn'+(p.id==='shopify'?' active':'')+'">'+(p.id==='index'?'Cover':p.label)+'</a>';
+    }).join('')+'</div>';
+  document.body.insertBefore(nav,document.currentScript);
+})();
+</script>
+<div class="wrap">
+
+  <div class="source-strip"><span>Source: Shopify Analytics</span><span>Data period: Jan 2026 - Apr 2026</span></div>
+
+  <div class="shop-filter-strip">
+    <span class="fstrip-label">Filter by channel</span>
+    <button class="ft-chip active" onclick="toggleChannel('all',this)" data-ft="all"><span class="ft-chip-dot"></span><span class="ft-chip-name">All</span></button>
+    <button class="ft-chip" onclick="toggleChannel('google',this)" data-ft="google" style="--tc:#1d4ed8"><span class="ft-chip-dot" style="background:#1d4ed8"></span><span class="ft-chip-name">Google</span></button>
+    <button class="ft-chip" onclick="toggleChannel('bing',this)" data-ft="bing" style="--tc:#f97316"><span class="ft-chip-dot" style="background:#f97316"></span><span class="ft-chip-name">Bing</span></button>
+    <button class="ft-chip" onclick="toggleChannel('yahoo',this)" data-ft="yahoo" style="--tc:#7c3aed"><span class="ft-chip-dot" style="background:#7c3aed"></span><span class="ft-chip-name">Yahoo!</span></button>
+    <button class="ft-chip" onclick="toggleChannel('duckduckgo',this)" data-ft="duckduckgo" style="--tc:#0f766e"><span class="ft-chip-dot" style="background:#0f766e"></span><span class="ft-chip-name">DuckDuckGo</span></button>
+  </div>
+
+  <div class="shop-layout">
+    <div class="shop-main">
+      <div class="chart-wrap">
+        <div class="chart-header">
+          <span class="chart-title">6-Month Trend</span>
+          <div class="chart-toggles" style="margin-bottom:0">
+            <button class="chart-btn active-clicks" id="btn-orders" onclick="toggleMetric('orders')">&#9679; Orders</button>
+            <button class="chart-btn active-impr" id="btn-cvr" onclick="toggleMetric('cvr')">&#9679; Conversion Rate</button>
+          </div>
+        </div>
+        <div class="chart-canvas-box">
+          <canvas id="shopChart"></canvas>
+        </div>
+        <p class="pos-note" id="shopChartNote">Source: Shopify Analytics.</p>
+      </div>
+    </div>
+
+    <div class="shop-hl-panel">
+      <div class="ki-header">
+        <span class="ki-icon">💡</span>
+        <span class="ki-header-title">Insights</span>
+      </div>
+      <ul><li>Loading data…</li></ul>
+    </div>
+  </div>
+
+  <div class="shop-bottom">
+    <section class="shop-table-panel">
+      <h3 class="shop-table-title">April Orders by Channel (MoM)</h3>
+      <table class="shop-table">
+        <thead>
+          <tr><th>Channel</th><th class="num">Apr</th><th class="num">Mar</th><th class="num">MoM</th></tr>
+        </thead>
+        <tbody data-csv-table="data/shopify-orders-by-channel.csv">
+          <tr><td colspan="20">Loading data…</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="shop-table-panel">
+      <h3 class="shop-table-title">April Conversion Rate by Channel (MoM)</h3>
+      <table class="shop-table">
+        <thead>
+          <tr><th>Channel</th><th class="num">Apr</th><th class="num">Mar</th><th class="num">MoM Δ</th></tr>
+        </thead>
+        <tbody data-csv-table="data/shopify-cvr-by-channel.csv">
+          <tr><td colspan="20">Loading data…</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</div>
+
+<script>
+if(window.Chart&&window.ChartDataLabels)Chart.register(ChartDataLabels);
+function parseCSV(text){
+  text=String(text||'').replace(/^\uFEFF/,'');
+  var rows=[],row=[],field='',inQ=false;
+  for(var i=0;i<text.length;i++){var c=text[i];
+    if(inQ){if(c==='"'){if(text[i+1]==='"'){field+='"';i++;}else{inQ=false;}}else{field+=c;}}
+    else{if(c==='"'){inQ=true;}else if(c===','){row.push(field);field='';}
+      else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);field='';if(row.length>1||row[0]!=='')rows.push(row);row=[];}
+      else{field+=c;}}
+  }
+  if(field!==''||row.length){row.push(field);rows.push(row);}
+  if(!rows.length)return{headers:[],rows:[]};
+  var h=rows.shift().map(function(x){return x.trim();});
+  return{headers:h,rows:rows.map(function(r){var o={};h.forEach(function(k,i){o[k]=r[i]!=null?r[i]:'';});return o;})};
+}
+async function loadCSV(p){try{var r=await fetch(p,{cache:'no-store'});if(!r.ok)throw new Error(r.status);var parsed=parseCSV(await r.text());return parsed.rows.length?parsed:null;}catch(e){return null;}}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function num(v){return Number(String(v==null?'':v).replace(/[^0-9.-]/g,''))||0;}
+function fmt(v){return num(v).toLocaleString('en-US',{maximumFractionDigits:0});}
+function pct(v){return num(v).toFixed(2)+'%';}
+function monthIndex(label){var m={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};var p=String(label||'').split(/\s+/);return (Number(p[1])||0)*12+(m[String(p[0]||'').slice(0,3).toLowerCase()]||0);}
+function dPct(cur,prev){return prev?((cur-prev)/prev*100):null;}
+function dText(v){if(v===null||!isFinite(v))return 'New';return (v>=0?'+':'')+v.toFixed(1)+'%';}
+function pp(v){return (v>=0?'+':'')+v.toFixed(2)+'pp';}
+var shop={monthly:[],channelMonthly:[],orders:[],cvr:[],selected:new Set(['all']),metrics:new Set(['orders','cvr']),chart:null};
+var CH_COLORS={google:'#1d4ed8',bing:'#f97316','yahoo!':'#7c3aed',duckduckgo:'#0f766e',aol:'#64748b',ecosia:'#009247',yandex:'#C0392B'};
+function channelLabel(ch){return ch==='yahoo!'?'Yahoo!':String(ch||'').replace(/\b\w/g,function(c){return c.toUpperCase();});}
+function isAll(){return shop.selected.has('all')||shop.selected.size===0;}
+function selectedLabel(){return isAll()?'All':Array.from(shop.selected).map(channelLabel).join(' + ');}
+function seriesFor(ch){if(ch==='all')return shop.monthly.slice().sort(function(a,b){return monthIndex(a.month)-monthIndex(b.month);});return shop.channelMonthly.filter(function(r){return r.channel===ch;}).sort(function(a,b){return monthIndex(a.month)-monthIndex(b.month);});}
+function buildDatasets(){var datasets=[];var active=isAll()?['all']:Array.from(shop.selected);active.forEach(function(ch){var rows=seriesFor(ch), color=ch==='all'?'#d97706':(CH_COLORS[ch]||'#64748b'), label=ch==='all'?'Total':channelLabel(ch);if(shop.metrics.has('orders'))datasets.push({label:label+' Orders',data:rows.map(function(r){return num(r.orders);}),borderColor:color,backgroundColor:color+'1a',borderWidth:2.6,pointRadius:3,tension:.3,yAxisID:'yOrders',datalabels:{display:true,color:color,font:{size:10,weight:'700'},anchor:'end',align:'top',formatter:function(v){return v?fmt(v):'';}}});if(shop.metrics.has('cvr'))datasets.push({label:label+' Conversion Rate',data:rows.map(function(r){return num(r.conversion_rate);}),borderColor:ch==='all'?'#0f766e':color,backgroundColor:'transparent',borderDash:[5,4],borderWidth:2,pointRadius:3,tension:.3,yAxisID:'yCvr',datalabels:{display:true,color:ch==='all'?'#0f766e':color,font:{size:10,weight:'700'},anchor:'end',align:'bottom',formatter:function(v){return v?num(v).toFixed(2)+'%':'';}}});});return datasets;}
+function renderChart(){var el=document.getElementById('shopChart');if(!el||!window.Chart)return;var labels=shop.monthly.slice().sort(function(a,b){return monthIndex(a.month)-monthIndex(b.month);}).map(function(r){return r.month;});if(shop.chart)shop.chart.destroy();shop.chart=new Chart(el,{type:'line',data:{labels:labels,datasets:buildDatasets()},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'#fff',borderColor:'#D9D9D9',borderWidth:1,titleColor:'#1A1A1A',bodyColor:'#2B2B2B'},datalabels:{display:function(ctx){return ctx.dataset.datalabels&&ctx.dataset.datalabels.display;}}},scales:{x:{grid:{color:'#EFEFEF'},ticks:{color:'#666',font:{size:10}}},yOrders:{type:'linear',position:'left',grid:{color:'#EFEFEF'},ticks:{color:'#666',font:{size:10}},beginAtZero:true,display:shop.metrics.has('orders')},yCvr:{type:'linear',position:'right',grid:{drawOnChartArea:false},ticks:{color:'#0f766e',font:{size:10},callback:function(v){return v+'%'}},beginAtZero:true,display:shop.metrics.has('cvr')}}}});document.getElementById('btn-orders').classList.toggle('active-clicks',shop.metrics.has('orders'));document.getElementById('btn-cvr').classList.toggle('active-impr',shop.metrics.has('cvr'));var note=document.getElementById('shopChartNote');if(note)note.textContent='Source: Shopify Analytics. Filter: '+selectedLabel()+'.';}
+function renderChips(){var strip=document.querySelector('.shop-filter-strip');if(!strip)return;var channels=Array.from(new Set(shop.channelMonthly.map(function(r){return r.channel;}))).sort(function(a,b){return channelLabel(a).localeCompare(channelLabel(b));});var html='<span class="fstrip-label">Filter by channel</span><button class="ft-chip active" onclick="toggleChannel(\'all\',this)" data-ft="all"><span class="ft-chip-dot"></span><span class="ft-chip-name">All</span></button>';channels.forEach(function(ch){var c=CH_COLORS[ch]||'#64748b';html+='<button class="ft-chip" onclick="toggleChannel(this.getAttribute(\'data-ft\'),this)" data-ft="'+esc(ch)+'" style="--tc:'+c+'"><span class="ft-chip-dot" style="background:'+c+'"></span><span class="ft-chip-name">'+esc(channelLabel(ch))+'</span></button>';});strip.innerHTML=html;}
+function renderTables(){var ob=document.querySelector('[data-csv-table="data/shopify-orders-by-channel.csv"]'), cb=document.querySelector('[data-csv-table="data/shopify-cvr-by-channel.csv"]');if(ob)ob.innerHTML=shop.orders.map(function(r){var d=String(r.mom_pct)==='New'?null:num(r.mom_pct);return'<tr><td>'+esc(channelLabel(r.channel))+'</td><td class="num">'+fmt(r.apr_orders)+'</td><td class="num">'+fmt(r.mar_orders)+'</td><td class="num '+(d===null||d>=0?'up':'down')+'">'+(d===null?'New':dText(d))+'</td></tr>';}).join('');if(cb)cb.innerHTML=shop.cvr.map(function(r){var d=num(r.mom_delta_pp);return'<tr><td>'+esc(channelLabel(r.channel))+'</td><td class="num">'+pct(r.apr_cvr)+'</td><td class="num">'+pct(r.mar_cvr)+'</td><td class="num '+(d>=0?'up':'down')+'">'+pp(d)+'</td></tr>';}).join('');}
+function renderInsights(){var ul=document.querySelector('.shop-hl-panel ul');if(!ul||!shop.monthly.length)return;var m=shop.monthly.slice().sort(function(a,b){return monthIndex(a.month)-monthIndex(b.month);});var cur=m[m.length-1],prev=m[m.length-2]||{};var top=shop.orders[0];var best=shop.cvr[0];var items=[];items.push('<strong>'+esc(cur.month)+' orders: '+fmt(cur.orders)+'.</strong> '+dText(dPct(num(cur.orders),num(prev.orders)))+' vs prior month.');items.push('<strong>Conversion rate: '+pct(cur.conversion_rate)+'.</strong> '+pp(num(cur.conversion_rate)-num(prev.conversion_rate))+' MoM.');if(top)items.push('<strong>'+esc(channelLabel(top.channel))+' drives order volume.</strong> '+fmt(top.apr_orders)+' orders in '+esc(cur.month)+'.');if(best)items.push('<strong>'+esc(channelLabel(best.channel))+' has the strongest CVR.</strong> '+pct(best.apr_cvr)+' in '+esc(cur.month)+'.');ul.innerHTML=items.map(function(i){return'<li>'+i+'</li>';}).join('');}
+function toggleChannel(ch,btn){if(ch==='all'){shop.selected=new Set(['all']);document.querySelectorAll('.ft-chip').forEach(function(el){el.classList.toggle('active',el.getAttribute('data-ft')==='all');});}else{if(shop.selected.has('all')){shop.selected.delete('all');var all=document.querySelector('.ft-chip[data-ft="all"]');if(all)all.classList.remove('active');}if(shop.selected.has(ch)){shop.selected.delete(ch);if(btn)btn.classList.remove('active');}else{shop.selected.add(ch);if(btn)btn.classList.add('active');}if(shop.selected.size===0){shop.selected.add('all');var a=document.querySelector('.ft-chip[data-ft="all"]');if(a)a.classList.add('active');}}renderChart();}
+function toggleMetric(metric){if(shop.metrics.has(metric))shop.metrics.delete(metric);else shop.metrics.add(metric);if(shop.metrics.size===0)shop.metrics.add('orders');renderChart();}
+async function initShopify(){var m=await loadCSV('data/shopify-monthly.csv'),cm=await loadCSV('data/shopify-channel-monthly.csv'),o=await loadCSV('data/shopify-orders-by-channel.csv'),c=await loadCSV('data/shopify-cvr-by-channel.csv');shop.monthly=m?m.rows:[];shop.channelMonthly=cm?cm.rows:[];shop.orders=o?o.rows:[];shop.cvr=c?c.rows:[];renderChips();renderChart();renderTables();renderInsights();}
+window.addEventListener('load',initShopify);
+</script>
+</body>
+</html>

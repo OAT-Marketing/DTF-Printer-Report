@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DTF Printer USA - BrightLocal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../reports-shared/assets/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="../../reports-shared/assets/scale.js"></script>
+<style>
+:root{--page-accent:#65a30d;--page-accent-soft:rgba(101,163,13,.10)}
+body:has(.page-nav) .wrap{padding-top:8px;padding-bottom:10px}
+
+/* ── KPI row ── */
+.bl-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}
+.bl-kpi-row .rpt-kpi{padding:8px 12px}
+.bl-kpi-row .rpt-kpi .l{font-size:9px;margin-bottom:2px}
+.bl-kpi-row .rpt-kpi .n{font-size:22px;line-height:1}
+.bl-kpi-row .rpt-kpi .kpi-sub{font-size:9px;color:var(--muted-2)}
+
+/* ── 2-col main layout ── */
+.bl-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:8px;align-items:start}
+.bl-col{display:flex;flex-direction:column;gap:8px;min-width:0}
+
+/* ── Panel base ── */
+.bl-panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.bl-panel-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink);background:var(--page-accent-soft);border-radius:6px;padding:5px 7px}
+.bl-panel-note{font-size:9px;color:var(--muted);font-style:italic;margin-top:-2px}
+
+/* ── Compact tables ── */
+.bl-tbl{width:100%;border-collapse:collapse;table-layout:fixed;font-size:9.5px;background:transparent;border:none;border-radius:0;overflow:visible;margin:0}
+.bl-tbl th{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;background:var(--header-dark);color:#fff;padding:3px 5px;border-bottom:none;text-align:left;white-space:nowrap}
+.bl-tbl th.r{text-align:right}
+.bl-tbl th.c{text-align:center}
+.bl-tbl td{font-size:9.5px;padding:4px 5px;border-bottom:1px solid var(--line-soft);color:var(--ink-2);vertical-align:middle}
+.bl-tbl td.r{text-align:right;font-variant-numeric:tabular-nums}
+.bl-tbl td.c{text-align:center}
+.bl-tbl td.feat{font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bl-tbl td.sm{font-size:9px;color:var(--muted)}
+.bl-tbl tr:last-child td{border-bottom:0}
+.bl-tbl tr.me-row td{background:rgba(242,140,40,.07)}
+.bl-tbl tr:has(.rk-w) td{background:rgba(242,140,40,.045)}
+.bl-tbl tr:has(.rk-n) td{background:rgba(100,116,139,.025)}
+.bl-tbl tr.me-row td:first-child{border-top:3px solid var(--page-accent)}
+.bl-tbl tr.me-row td.feat{color:var(--page-accent);font-weight:700}
+.bl-tbl tr.total-row td{border-top:1px solid var(--line);font-weight:700;color:var(--ink)}
+
+/* ── Rank pills ── */
+.rk{display:inline-block;min-width:22px;padding:1px 5px;border-radius:6px;font-size:9px;font-weight:800;text-align:center;font-variant-numeric:tabular-nums}
+.rk-g{background:rgba(0,146,71,.12);color:#007a3d}
+.rk-w{background:rgba(242,140,40,.14);color:#c05e00}
+.rk-b{background:rgba(192,57,43,.12);color:#9b2215}
+.rk-n{background:var(--surface);color:var(--muted);border:1px solid var(--line-soft)}
+
+/* ── Donut chart layout ── */
+.bl-donut-wrap{display:flex;align-items:center;gap:10px;min-width:0}
+.bl-donut-canvas{position:relative;width:100px;height:100px;flex-shrink:0}
+.bl-donut-canvas canvas{position:absolute;top:0;left:0;width:100%!important;height:100%!important}
+.bl-donut-legend{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.bl-legend-row{display:flex;justify-content:space-between;align-items:center;font-size:9.5px;color:var(--ink-2);gap:6px}
+.bl-legend-left{display:flex;align-items:center;gap:5px;min-width:0}
+.bl-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.bl-legend-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bl-legend-val{font-weight:700;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+.bl-legend-pct{font-size:8.5px;color:var(--muted);white-space:nowrap}
+
+/* ── Keyword tabs ── */
+.bl-tabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:2px}
+.bl-tab{background:var(--surface);border:1px solid var(--line);border-radius:5px;font-size:8.5px;font-weight:700;color:var(--muted);padding:2px 7px;cursor:pointer;white-space:nowrap;transition:all .12s;font-family:inherit;text-transform:uppercase;letter-spacing:.2px}
+.bl-tab:hover{border-color:var(--page-accent);color:var(--page-accent)}
+.bl-tab.on{background:var(--page-accent);border-color:var(--page-accent);color:#fff}
+.bl-pane{display:none}
+.bl-pane.on{display:block}
+
+/* ── NAP status card ── */
+.bl-nap{background:var(--surface);border:1px solid var(--line-soft);border-radius:6px;padding:7px 10px;font-size:9.5px;line-height:1.55;color:var(--ink-2)}
+.bl-nap-title{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin-bottom:4px}
+.bl-nap-row{display:flex;gap:6px;align-items:flex-start;margin-bottom:2px}
+.bl-nap-row:last-child{margin-bottom:0}
+.bl-chip{display:inline-block;font-size:8px;font-weight:800;padding:1px 5px;border-radius:4px;text-transform:uppercase;letter-spacing:.2px;white-space:nowrap;flex-shrink:0;margin-top:1px}
+.bl-chip-ok{background:rgba(0,146,71,.12);color:#007a3d}
+.bl-chip-warn{background:rgba(242,140,40,.14);color:#c05e00}
+
+/* ── Combined Views+Actions grid ── */
+.bl-charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bl-chart-block{}
+.bl-chart-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin-bottom:3px}
+.bl-chart-total{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800;color:var(--ink);line-height:1;margin-bottom:4px}
+
+/* ── Highlights + Reco card ── */
+.bl-hr-section{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin-bottom:5px;padding-bottom:3px;border-bottom:1px solid var(--line-soft)}
+.bl-hr-list{list-style:none;margin:0 0 8px;padding:0;display:flex;flex-direction:column;gap:4px}
+.bl-hr-list li{display:flex;gap:6px;align-items:flex-start;font-size:9.5px;color:var(--ink-2);line-height:1.45}
+.bl-hr-list li .bl-chip{margin-top:1px}
+.bl-win-icon{font-size:10px;flex-shrink:0;margin-top:1px}
+.bl-pri-high{background:rgba(192,57,43,.12);color:#9b2215}
+.bl-pri-med{background:rgba(242,140,40,.14);color:#c05e00}
+.bl-pri-low{background:rgba(0,146,71,.12);color:#007a3d}
+
+.bl-panel.kw-competitors table th:nth-child(3),
+.bl-panel.kw-competitors table td:nth-child(3){display:none}
+</style>
+</head>
+<body>
+<script src="../../reports-shared/components/_pages.js"></script>
+<script>
+(function(){
+  var pages=(window.REPORT_PAGES||[]);
+  var nav=document.createElement('nav');
+  nav.className='page-nav';
+  nav.innerHTML='<div class="nav-left"><span class="nav-page-title">BrightLocal</span></div>'+
+    '<div class="nav-links">'+
+    pages.map(function(p){
+      return '<a href="'+p.href+'" class="nav-btn'+(p.id==='brightlocal'?' active':'')+'">'+(p.id==='index'?'Cover':p.label)+'</a>';
+    }).join('')+'</div>';
+  document.body.insertBefore(nav,document.currentScript);
+})();
+</script>
+<div class="wrap">
+
+<!-- ── 4-KPI row ── -->
+<div class="bl-kpi-row">
+  <div class="rpt-kpi" style="border-top:4px solid var(--accent)">
+    <div class="l">GBP Views</div>
+    <div class="n">—</div>
+    <div class="kpi-sub"></div>
+  </div>
+  <div class="rpt-kpi" style="border-top:4px solid var(--pos)">
+    <div class="l">Total Actions</div>
+    <div class="n" style="color:var(--pos)">—</div>
+    <div class="kpi-sub"></div>
+  </div>
+  <div class="rpt-kpi" style="border-top:4px solid #f59e0b">
+    <div class="l">Reviews</div>
+    <div class="n">—</div>
+    <div class="kpi-sub"></div>
+  </div>
+  <div class="rpt-kpi">
+    <div class="l">GBP Photos</div>
+    <div class="n">—</div>
+    <div class="kpi-sub"></div>
+  </div>
+</div>
+
+<!-- ── 2-col main layout ── -->
+<div class="bl-layout">
+
+  <!-- ── LEFT COLUMN ── -->
+  <div class="bl-col">
+
+    <!-- Search Rankings -->
+    <section class="bl-panel" style="border-top:4px solid var(--pos)">
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <div class="bl-panel-title">Search Rankings - Local Pack</div>
+        <div class="bl-panel-note">GBP Audit · May 5, 2026</div>
+      </div>
+      <table class="bl-tbl">
+        <colgroup>
+          <col style="width:44%">
+          <col style="width:14%">
+          <col style="width:42%">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Keyword</th>
+            <th class="c">Local Pack</th>
+            <th>Context</th>
+          </tr>
+        </thead>
+        <tbody data-csv-table="data/brightlocal-rank-tracker.csv">
+          <tr><td colspan="20">Loading data…</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Competitors by Keyword -->
+    <section class="bl-panel kw-competitors" style="border-top:4px solid var(--accent)">
+      <div class="bl-panel-title">Competitors by Keyword</div>
+      <div class="bl-tabs">
+        <button class="bl-tab on"  onclick="blTab(this,'kw0')">DTF Printing</button>
+        <button class="bl-tab"     onclick="blTab(this,'kw1')">DTF Printing near me</button>
+        <button class="bl-tab"     onclick="blTab(this,'kw2')">best DTF Printing</button>
+        <button class="bl-tab"     onclick="blTab(this,'kw3')">DTF Transfers</button>
+        <button class="bl-tab"     onclick="blTab(this,'kw4')">Custom Tshirt Printing</button>
+      </div>
+
+      <!-- Pane: DTF Printing (DTF Printer USA = #2) -->
+      <div class="bl-pane on" id="kw0">
+        <table class="bl-tbl">
+          <colgroup>
+            <col style="width:6%">
+            <col style="width:34%">
+            <col style="width:13%">
+            <col style="width:13%">
+            <col style="width:13%">
+            <col style="width:10%">
+            <col style="width:11%">
+          </colgroup>
+          <thead>
+            <tr>
+              <th class="c">#</th>
+              <th>Business</th>
+              <th class="r">Web Auth</th>
+              <th class="r">Reviews</th>
+              <th class="r">Photos</th>
+              <th class="r">Cit.</th>
+              <th class="r">Links</th>
+            </tr>
+          </thead>
+          <tbody data-csv-table="data/brightlocal-competitors.csv">
+          <tr><td colspan="20">Loading data…</td></tr>
+        </tbody>
+        </table>
+      </div>
+
+      <!-- Pane: DTF Printing near me (DTF Printer USA = #3) -->
+      <div class="bl-pane" id="kw1">
+        <table class="bl-tbl">
+          <colgroup>
+            <col style="width:6%"><col style="width:34%"><col style="width:13%"><col style="width:13%"><col style="width:13%"><col style="width:10%"><col style="width:11%">
+          </colgroup>
+          <thead><tr><th class="c">#</th><th>Business</th><th class="r">Web Auth</th><th class="r">Reviews</th><th class="r">Photos</th><th class="r">Cit.</th><th class="r">Links</th></tr></thead>
+          <tbody data-csv-table="data/brightlocal-gbp.csv">
+          <tr><td colspan="20">Loading data…</td></tr>
+        </tbody>
+        </table>
+      </div>
+
+      <!-- Pane: best DTF Printing (DTF Printer USA = #3) -->
+      <div class="bl-pane" id="kw2">
+        <table class="bl-tbl">
+          <colgroup>
+            <col style="width:6%"><col style="width:34%"><col style="width:13%"><col style="width:13%"><col style="width:13%"><col style="width:10%"><col style="width:11%">
+          </colgroup>
+          <thead><tr><th class="c">#</th><th>Business</th><th class="r">Web Auth</th><th class="r">Reviews</th><th class="r">Photos</th><th class="r">Cit.</th><th class="r">Links</th></tr></thead>
+          <tbody data-csv-table="data/brightlocal-actions.csv">
+          <tr><td colspan="20">Loading data…</td></tr>
+        </tbody>
+        </table>
+      </div>
+
+      <!-- Pane: DTF Transfers (DTF Printer USA = #4) -->
+      <div class="bl-pane" id="kw3">
+        <table class="bl-tbl">
+          <colgroup>
+            <col style="width:6%"><col style="width:34%"><col style="width:13%"><col style="width:13%"><col style="width:13%"><col style="width:10%"><col style="width:11%">
+          </colgroup>
+          <thead><tr><th class="c">#</th><th>Business</th><th class="r">Web Auth</th><th class="r">Reviews</th><th class="r">Photos</th><th class="r">Cit.</th><th class="r">Links</th></tr></thead>
+          <tbody data-csv-table="data/brightlocal-actions.csv">
+          <tr><td colspan="20">Loading data…</td></tr>
+        </tbody>
+        </table>
+      </div>
+
+      <!-- Pane: Custom Tshirt Printing (DTF Printer USA = #5) -->
+      <div class="bl-pane" id="kw4">
+        <table class="bl-tbl">
+          <colgroup>
+            <col style="width:6%"><col style="width:34%"><col style="width:13%"><col style="width:13%"><col style="width:13%"><col style="width:10%"><col style="width:11%">
+          </colgroup>
+          <thead><tr><th class="c">#</th><th>Business</th><th class="r">Web Auth</th><th class="r">Reviews</th><th class="r">Photos</th><th class="r">Cit.</th><th class="r">Links</th></tr></thead>
+          <tbody data-csv-table="data/brightlocal-actions.csv">
+          <tr><td colspan="20">Loading data…</td></tr>
+        </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div><!-- /left col -->
+
+  <!-- ── RIGHT COLUMN ── -->
+  <div class="bl-col">
+
+    <!-- GBP Views + Actions combined -->
+    <section class="bl-panel">
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <div class="bl-panel-title">GBP Views &amp; Actions</div>
+        <div class="bl-panel-note">Apr 8 - May 8 · all surfaces &amp; devices</div>
+      </div>
+
+      <div class="bl-charts-grid">
+
+        <!-- Views -->
+        <div class="bl-chart-block">
+          <div class="bl-chart-label">Views</div>
+          <div class="bl-chart-total">9,840</div>
+          <div class="bl-donut-wrap" style="gap:8px">
+            <div class="bl-donut-canvas" style="width:80px;height:80px"><canvas id="viewsChart"></canvas></div>
+            <div class="bl-donut-legend">
+              <div class="bl-legend-row">
+                <div class="bl-legend-left"><span class="bl-legend-dot" style="background:#4ade80"></span><span class="bl-legend-label">Search Desk</span></div>
+                <span class="bl-legend-val">3,770</span>
+              </div>
+              <div class="bl-legend-row">
+                <div class="bl-legend-left"><span class="bl-legend-dot" style="background:#86efac"></span><span class="bl-legend-label">Search Mob</span></div>
+                <span class="bl-legend-val">3,610</span>
+              </div>
+              <div class="bl-legend-row">
+                <div class="bl-legend-left"><span class="bl-legend-dot" style="background:#a78bfa"></span><span class="bl-legend-label">Maps Mob</span></div>
+                <span class="bl-legend-val">2,080</span>
+              </div>
+              <div class="bl-legend-row">
+                <div class="bl-legend-left"><span class="bl-legend-dot" style="background:#c4b5fd"></span><span class="bl-legend-label">Maps Desk</span></div>
+                <span class="bl-legend-val">379</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="bl-chart-block">
+          <div class="bl-chart-label">Actions</div>
+          <div class="bl-chart-total" style="color:var(--pos)">3,546</div>
+          <div class="bl-donut-wrap" style="gap:8px">
+            <div class="bl-donut-canvas" style="width:80px;height:80px"><canvas id="actionsChart"></canvas></div>
+            <div class="bl-donut-legend">
+              <div class="bl-legend-row">
+                <div class="bl-legend-left"><span class="bl-legend-dot" style="background:#009247"></span><span class="bl-legend-label">Website Clicks</span></div>
+                <span class="bl-legend-val">1,880</span>
+              </div>
+              <div class="bl-legend-row">
+                <div class="bl-legend-left"><span class="bl-legend-dot" style="background:#4ade80"></span><span class="bl-legend-label">Directions</span></div>
+                <span class="bl-legend-val">1,280</span>
+              </div>
+              <div class="bl-legend-row">
+                <div class="bl-legend-left"><span class="bl-legend-dot" style="background:#fbbf24"></span><span class="bl-legend-label">Phone Calls</span></div>
+                <span class="bl-legend-val">386</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /bl-charts-grid -->
+    </section>
+
+    <!-- Highlights + Recommendations -->
+    <section class="bl-panel" style="border-top:4px solid var(--pos)">
+      <div class="bl-panel-title">Highlights &amp; Recommendations</div>
+      <ul class="bl-hr-list"><li>Loading data…</li></ul>
+
+      <div class="bl-hr-section">Recommendations</div>
+      <ul class="bl-hr-list"><li>Loading data…</li></ul>
+    </section>
+
+  </div><!-- /right col -->
+</div><!-- /bl-layout -->
+
+<div class="gsc-footer" style="max-width:1280px;margin:8px auto 0;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted-2);padding:0 2px">
+  <span>Source: BrightLocal · GBP Audit &amp; Insights</span>
+  <span>Data period: last 30 days (Apr 8 - May 8, 2026) · Generated: May 5, 2026</span>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+if(window.Chart&&window.ChartDataLabels)Chart.register(ChartDataLabels);
+var REPORT_CSV_FILES=["data/brightlocal-kpis.csv","data/brightlocal-rank-tracker.csv","data/brightlocal-competitors.csv","data/brightlocal-gbp.csv","data/brightlocal-actions.csv"];
+var REPORT_CHARTS=["viewsChart","actionsChart"];
+function parseCSV(text){
+  text=String(text||'').replace(/^﻿/,'');
+  var rows=[],row=[],field='',inQ=false;
+  for(var i=0;i<text.length;i++){var c=text[i];
+    if(inQ){if(c==='"'){if(text[i+1]==='"'){field+='"';i++;}else{inQ=false;}}else{field+=c;}}
+    else{if(c==='"'){inQ=true;}else if(c===','){row.push(field);field='';}
+      else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);field='';if(row.length>1||row[0]!=='')rows.push(row);row=[];}
+      else{field+=c;}}
+  }
+  if(field!==''||row.length){row.push(field);rows.push(row);}
+  if(!rows.length)return{headers:[],rows:[]};
+  var h=rows.shift().map(function(x){return x.trim();});
+  return{headers:h,rows:rows.map(function(r){var o={};h.forEach(function(k,i){o[k]=r[i]!=null?r[i]:'';});return o;})};
+}
+async function loadCSV(p){try{var r=await fetch(p,{cache:'no-store'});if(!r.ok)throw new Error(r.status);var parsed=parseCSV(await r.text());return parsed.rows.length?parsed:null;}catch(e){return null;}}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function msg(file){return 'Report data is unavailable.';}
+function setPlaceholders(){document.querySelectorAll('.rpt-kpi .n').forEach(function(el){el.textContent='—';});document.querySelectorAll('.delta-row .val').forEach(function(el){el.textContent='—';el.classList.add('placeholder');});document.querySelectorAll('button[id*="Toggle"],button[id*="see-more"],button[id="histToggle"],.ai-see-more,.kw-see-more,.bl-see-more,.see-more-btn').forEach(function(el){el.style.display='none';});}
+function renderTable(tbody,csv,file){if(!tbody)return;if(!csv||!csv.rows.length){tbody.innerHTML='<tr><td colspan="20">'+esc(msg(file))+'</td></tr>';return;}var h=csv.headers;tbody.innerHTML=csv.rows.slice(0,20).map(function(r){return'<tr>'+h.map(function(k,j){return'<td class="'+(j===0?'pg':'num')+'">'+esc(r[k]||'—')+'</td>';}).join('')+'</tr>';}).join('');var btn=tbody.closest('table')&&tbody.closest('table').parentElement&&tbody.closest('table').parentElement.querySelector('button');if(btn&&csv.rows.length>20){btn.style.display='inline-block';btn.textContent='See '+(csv.rows.length-20)+' more rows';}}
+function firstNumberField(headers){return headers.find(function(h){return !/month|date|page|query|keyword|channel|source|domain|url|status|type|category|issue|fix|note|field|label/i.test(h);});}
+function initChart(id,csv,file){var el=document.getElementById(id);if(!el||!window.Chart)return;var isDonut=/donut|views|actions/i.test(id);var labels=[],data=[];if(csv&&csv.rows.length){var labelKey=csv.headers.find(function(h){return/month|date|source|channel|label|type|status/i.test(h);})||csv.headers[0];var valKey=firstNumberField(csv.headers)||csv.headers[1];labels=csv.rows.slice(0,12).map(function(r){return r[labelKey]||'';});data=csv.rows.slice(0,12).map(function(r){return Number(String(r[valKey]||'').replace(/[^0-9.-]/g,''))||0;});}new Chart(el,{type:isDonut?'doughnut':'line',data:{labels:labels,datasets:[{label:file.replace(/^data\//,''),data:data,borderColor:getComputedStyle(document.documentElement).getPropertyValue('--page-accent')||'#F28C28',backgroundColor:isDonut?['#F28C28','#2563eb','#009247','#7a4eb8','#6b7280']:'rgba(242,140,40,.10)',borderWidth:2,pointRadius:3,tension:.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:isDonut},datalabels:{display:false}},scales:isDonut?{}:{x:{grid:{color:'#EFEFEF'},ticks:{color:'#666',font:{size:10}}},y:{grid:{color:'#EFEFEF'},ticks:{color:'#666',font:{size:10}},beginAtZero:true}}}});}
+async function initDataPage(){setPlaceholders();var loaded={};for(var i=0;i<REPORT_CSV_FILES.length;i++){loaded[REPORT_CSV_FILES[i]]=await loadCSV(REPORT_CSV_FILES[i]);}document.querySelectorAll('[data-csv-table]').forEach(function(tbody){var f=tbody.getAttribute('data-csv-table');renderTable(tbody,loaded[f],f);});REPORT_CHARTS.forEach(function(id,i){var f=REPORT_CSV_FILES[i]||REPORT_CSV_FILES[0]||'data/file.csv';initChart(id,loaded[f],f);});var missing=REPORT_CSV_FILES.find(function(f){return!loaded[f];});document.querySelectorAll('.pos-note,.gsc-footer span:last-child,.source-strip span:last-child').forEach(function(el){if(missing)el.textContent=msg(missing);});}
+function toggleMetric(){}function toggleGa4(){}function setChannel(ch,btn){document.querySelectorAll('.ga4-ch-chip').forEach(function(el){el.classList.remove('active');});if(btn)btn.classList.add('active');}
+function toggleGa4Pages(){}function toggleChannel(ch,btn){document.querySelectorAll('.ft-chip').forEach(function(el){el.classList.remove('active');});if(btn)btn.classList.add('active');}
+function toggleBingMetric(){}function toggleBingRows(){}function toggleAiTable(){}function blTab(btn,id){var panel=btn&&btn.closest('.bl-panel');if(!panel)return;panel.querySelectorAll('.bl-tab').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');panel.querySelectorAll('.bl-pane').forEach(function(p){p.classList.toggle('on',p.id===id);});}
+window.addEventListener('load',initDataPage);
+</script>
+</body>
+</html>

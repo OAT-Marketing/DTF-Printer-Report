@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body>
+<report-shell page="competitors" accent="#9b1c12">
+  <section-heading number="11" title="Competitor Benchmark" subtitle="Authority & visibility"></section-heading>
+
+  <h2 class="sec">Headline KPIs</h2>
+  <kpi-grid src="data/competitors-kpis.csv" cols="4"></kpi-grid>
+
+  <h2 class="sec">Benchmark</h2>
+  <csv-table src="data/competitors.csv"
+             cols="competitor,dr,referring_domains,organic_keywords,organic_traffic,top_3_keywords"
+             labels="Competitor,DR,Ref. domains,Keywords,Traffic,Top-3 KWs"
+             sortable
+             num-cols="dr,referring_domains,organic_keywords,organic_traffic,top_3_keywords"></csv-table>
+</report-shell>
+<script src="../../reports-shared/components/report-shell.js"></script>
+</body>
+</html>

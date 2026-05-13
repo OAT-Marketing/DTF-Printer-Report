@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DTF Printer USA - Keyword Universe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../reports-shared/assets/style.css">
+<script src="../../reports-shared/assets/scale.js"></script>
+<style>
+:root{--page-accent:#009247;--page-accent-soft:rgba(0,146,71,.10)}
+body:has(.page-nav) .wrap{padding-top:8px;padding-bottom:10px}
+.source-strip{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:5px 8px;margin-bottom:8px;font-size:9px;color:var(--muted-2)}
+
+/* ── KPI 4-col row ── */
+.kw-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}
+.kw-kpi-row .rpt-kpi{padding:8px 12px}
+.kw-kpi-row .rpt-kpi .l{font-size:9px;margin-bottom:2px}
+.kw-kpi-row .rpt-kpi .n{font-size:22px;line-height:1}
+.kw-kpi-row .rpt-kpi .kpi-sub{font-size:9px;color:var(--muted-2)}
+
+/* ── Main: history table full-width ── */
+.kw-main{margin-bottom:8px}
+
+/* ── Highlights - pinned page bottom ── */
+.kw-highlights-section{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px;max-width:1280px;margin:0 auto 24px;}
+.kw-highlights-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* ── Cluster table panel ── */
+.kw-table-panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px;display:flex;flex-direction:column;gap:4px;min-width:0;overflow:hidden}
+.kw-panel-title{font-size:11px;font-weight:700;color:var(--ink);text-transform:uppercase;letter-spacing:.5px;background:var(--page-accent-soft);border-radius:6px;padding:5px 7px}
+.kw-panel-note{font-size:9px;color:var(--muted);font-style:italic;margin-bottom:2px}
+.kw-tbl{width:100%;border-collapse:collapse;table-layout:fixed}
+.kw-tbl th{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:var(--muted);padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}
+.kw-tbl th:first-child,.kw-tbl th:nth-child(2){text-align:left}
+.kw-tbl col.c-kw{width:40%}
+.kw-tbl col.c-vol{width:12%}
+.kw-tbl col.c-cl{width:11%}
+.kw-tbl col.c-pos{width:11%}
+.kw-tbl col.c-st{width:16%}
+.kw-tbl td{font-size:10px;padding:4px 6px;border-bottom:1px solid var(--line-soft);color:var(--ink-2)}
+.kw-tbl td:not(:first-child):not(:nth-child(2)){text-align:right;font-variant-numeric:tabular-nums}
+.kw-tbl td.kw-kw{font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kw-tbl td.kw-vol{color:var(--muted)}
+.pos-good{color:#16a34a;font-weight:700}
+.pos-mid{color:#b45309;font-weight:700}
+.pos-bad{color:#dc2626;font-weight:700}
+.pos-dash{color:var(--muted)}
+.badge{display:inline-block;font-size:8.5px;font-weight:700;padding:1px 6px;border-radius:8px;text-transform:uppercase;letter-spacing:.2px}
+.badge-rank{background:rgba(34,197,94,.12);color:#16a34a}
+.badge-weak{background:rgba(234,179,8,.12);color:#b45309}
+.badge-gap{background:rgba(239,68,68,.12);color:#dc2626}
+/* cluster tag */
+.ct{display:inline-block;font-size:7.5px;font-weight:700;padding:1px 5px;border-radius:4px;text-transform:uppercase;letter-spacing:.2px;margin-right:4px;vertical-align:middle;white-space:nowrap}
+.ct-dtf{background:#dbeafe;color:#1d4ed8}
+.ct-rtp{background:#ede9fe;color:#6d28d9}
+.ct-gang{background:#d1fae5;color:#065f46}
+.ct-uv{background:#fce7f3;color:#9d174d}
+.ct-geo{background:#fef3c7;color:#92400e}
+.ct-brand{background:#f3f4f6;color:#374151}
+/* hidden extra rows */
+.kw-extra{display:none}
+.kw-see-more{background:none;border:none;font-size:10px;color:var(--page-accent);font-weight:700;cursor:pointer;padding:4px 0 0;font-family:inherit}
+.kw-see-more:hover{text-decoration:underline}
+
+/* ── Variant section full-width ── */
+.kw-var-section{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+
+/* ── Variant cards ── */
+.var-grid-wrap{min-width:0;width:100%}
+.var-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;min-width:0;width:100%}
+.var-card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0;overflow:hidden}
+.var-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.var-seed{font-size:10px;font-weight:700;color:var(--ink)}
+.var-badge{font-size:8.5px;font-weight:700;color:#fff;background:var(--page-accent);border-radius:8px;padding:1px 6px}
+.var-meta{font-size:9px;color:var(--muted);margin-bottom:5px}
+.var-meta strong{color:var(--ink-2)}
+.var-rows{border-top:1px solid var(--line-soft);padding-top:4px;display:flex;flex-direction:column;gap:1px}
+.var-row{display:flex;justify-content:space-between;font-size:9px;color:var(--ink-2);padding:1px 0}
+.var-qkw{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:6px}
+.var-cl{font-weight:700;color:var(--ink);white-space:nowrap}
+
+/* ── Right panel ── */
+.kw-insight-panel{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+.kw-ins-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.kw-ins-body{font-size:10px;color:var(--ink-2);line-height:1.55}
+.kw-ins-body strong{color:var(--ink)}
+.kw-gap-list{margin:6px 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:4px}
+.kw-gap-item{font-size:9.5px;color:var(--ink-2);padding:5px 8px;background:var(--bg);border-radius:5px;border-top:3px solid var(--neg)}
+.kw-gap-item strong{color:var(--ink);display:block;font-size:10px}
+.kw-gap-item span{color:var(--muted)}
+
+/* total stat row */
+.kw-stat-row{display:flex;gap:10px;flex-wrap:wrap}
+.kw-stat{font-size:9px;color:var(--muted)}
+.kw-stat strong{font-size:13px;font-weight:800;color:var(--ink);display:block;font-family:'Montserrat',sans-serif;line-height:1}
+
+/* ── Monthly history table ── */
+.kw-history-wrap{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px;min-width:0}
+.kw-hist-tbl{width:100%;border-collapse:collapse;table-layout:fixed;font-size:9.5px}
+.kw-hist-tbl th{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;background:var(--header-dark);color:#fff;padding:3px 4px;border-bottom:none;text-align:center;white-space:nowrap}
+.kw-hist-tbl th:nth-child(1),.kw-hist-tbl th:nth-child(2){text-align:left}
+/* month label row - matches global th standard */
+.kw-hist-month-row th{font-size:8px;font-weight:700;background:var(--header-dark);color:#fff;text-align:center!important;border-bottom:none;padding:4px 4px 3px;text-transform:uppercase;letter-spacing:.4px}
+.kw-hist-tbl td{font-size:9px;padding:3px 4px;border-bottom:1px solid var(--line-soft);color:var(--ink-2);text-align:center;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kw-hist-tbl td.hn{color:var(--muted);text-align:left;font-size:8.5px}
+.kw-hist-tbl td.hkw{text-align:left;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hdelta{font-weight:700}
+.hdelta.up{color:#16a34a}
+.hdelta.dn{color:#dc2626}
+.hdelta.neu{color:var(--muted)}
+.kw-hist-extra{display:none}
+/* month column shading - alternating tint per month group */
+.ms0{background:rgba(99,102,241,.065)}
+.ms1{background:rgba(100,116,139,.045)}
+.ms2{background:rgba(249,115,22,.065)}
+.ms3{background:rgba(14,165,233,.045)}
+.ms4{background:rgba(16,185,129,.065)}
+.ms5{background:rgba(245,158,11,.075)}
+.kw-hist-tbl th.ms0{background:#34375f}
+.kw-hist-tbl th.ms1{background:#334155}
+.kw-hist-tbl th.ms2{background:#5a341f}
+.kw-hist-tbl th.ms3{background:#164e63}
+.kw-hist-tbl th.ms4{background:#18543d}
+.kw-hist-tbl th.ms5{background:#5f3f12}
+/* left border on first col of each month */
+.ms0.ms-first{border-left:2px solid rgba(99,102,241,.25)}
+.ms1.ms-first{border-left:2px solid var(--line)}
+.ms2.ms-first{border-left:2px solid rgba(249,115,22,.25)}
+.ms3.ms-first{border-left:2px solid var(--line)}
+.ms4.ms-first{border-left:2px solid rgba(16,185,129,.25)}
+.ms5.ms-first{border-left:2px solid rgba(245,158,11,.35)}
+.m-delta{border-left:2px solid var(--line-soft)}
+.kw-rank-tbl col.c-num{width:3%}
+.kw-rank-tbl col.c-keyword{width:24%}
+.kw-rank-tbl col.c-small{width:8%}
+.kw-rank-tbl col.c-volume{width:8%}
+.kw-rank-tbl col.c-topic{width:18%}
+.kw-rank-tbl col.c-intent{width:16%}
+.kw-rank-tbl col.c-url{width:15%}
+.intent-pill{display:inline-block;font-size:7.5px;font-weight:700;padding:1px 5px;border-radius:4px;background:#f3f4f6;color:#374151;margin:0 2px 2px 0;text-transform:uppercase;letter-spacing:.2px}
+.kw-url{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--page-accent);text-decoration:none}
+.kw-url:hover{text-decoration:underline}
+.diff-note{font-size:9px;color:var(--muted);margin-top:6px;line-height:1.35}
+</style>
+</head>
+<body>
+<script src="../../reports-shared/components/_pages.js"></script>
+<script>
+(function(){
+  var pages=(window.REPORT_PAGES||[]);
+  var nav=document.createElement('nav');
+  nav.className='page-nav';
+  nav.innerHTML='<div class="nav-left"><span class="nav-page-title">Keywords</span></div>'+
+    '<div class="nav-links">'+
+    pages.map(function(p){
+      return '<a href="'+p.href+'" class="nav-btn'+(p.id==='keywords'?' active':'')+'">'+(p.id==='index'?'Cover':p.label)+'</a>';
+    }).join('')+'</div>';
+  document.body.insertBefore(nav,document.currentScript);
+})();
+</script>
+<script>
+var KEYWORDS_CSV="data/gsc-keywords-monthly.csv";
+var VARIANTS_CSV="data/gsc-keyword-variants.csv";
+var kwRows=[];
+var MONTHS=[
+  {key:"nov25",label:"Nov 2025",cls:"ms0"},
+  {key:"dec25",label:"Dec 2025",cls:"ms1"},
+  {key:"jan26",label:"Jan 2026",cls:"ms2"},
+  {key:"feb26",label:"Feb 2026",cls:"ms3"},
+  {key:"mar26",label:"Mar 2026",cls:"ms4"},
+  {key:"apr26",label:"Apr 2026",cls:"ms5"}
+];
+function parseCSV(text){
+  text=String(text||'').replace(/^﻿/,'');
+  var rows=[],row=[],field='',inQ=false;
+  for(var i=0;i<text.length;i++){var c=text[i];
+    if(inQ){if(c==='"'){if(text[i+1]==='"'){field+='"';i++;}else{inQ=false;}}else{field+=c;}}
+    else{if(c==='"'){inQ=true;}else if(c===','){row.push(field);field='';}
+      else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);field='';if(row.length>1||row[0]!=='')rows.push(row);row=[];}
+      else{field+=c;}}
+  }
+  if(field!==''||row.length){row.push(field);rows.push(row);}
+  if(!rows.length)return{headers:[],rows:[]};
+  var h=rows.shift().map(function(x){return x.trim();});
+  return{headers:h,rows:rows.map(function(r){var o={};h.forEach(function(k,i){o[k]=r[i]!=null?r[i]:'';});return o;})};
+}
+async function loadCSV(p){try{var r=await fetch(p,{cache:'no-store'});if(!r.ok)throw new Error(r.status);var parsed=parseCSV(await r.text());return parsed.rows.length?parsed:null;}catch(e){return null;}}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function num(v){if(v==null||v==='')return null;var n=Number(String(v).replace(/[^0-9.-]/g,''));return isFinite(n)?n:null;}
+function fmt(n){return n==null||!isFinite(n)?'—':Math.round(n).toLocaleString('en-US');}
+function fmtPos(n){return n==null||!isFinite(n)?'—':Number(n).toFixed(1);}
+function monthVal(row,month,metric){return num(row[month.key+"_"+metric]);}
+function totalClicks(row){return MONTHS.reduce(function(sum,m){return sum+(monthVal(row,m,"clicks")||0);},0);}
+function totalImpressions(row){return MONTHS.reduce(function(sum,m){return sum+(monthVal(row,m,"imp")||0);},0);}
+function weightedPosition(row){
+  var weighted=0,imps=0;
+  MONTHS.forEach(function(m){var p=monthVal(row,m,"pos"),i=monthVal(row,m,"imp");if(p!=null&&i){weighted+=p*i;imps+=i;}});
+  return imps?weighted/imps:null;
+}
+function clusterClass(label){var s=String(label||'').toLowerCase();if(/ready|press|rtp/.test(s))return'rtp';if(/gang/.test(s))return'gang';if(/uv/.test(s))return'uv';if(/near|new jersey| nj|local/.test(s))return'geo';if(/gildan|uniform|shirt|apparel/.test(s))return'brand';return'dtf';}
+function clusterLabel(query){var s=String(query||'').toLowerCase();if(/ready|press|rtp/.test(s))return'RTP';if(/gang/.test(s))return'GANG';if(/uv/.test(s))return'UV';if(/near|new jersey| nj|local/.test(s))return'GEO';if(/gildan|uniform|shirt|apparel/.test(s))return'BRAND';return'DTF';}
+function deltaClass(delta){if(delta==null)return'neu';return delta<0?'up':delta>0?'dn':'neu';}
+function deltaText(delta){if(delta==null)return'—';return (delta>0?'+':'')+delta.toFixed(1);}
+function renderKpis(rows){
+  var apr=MONTHS[5];
+  var ranking=rows.filter(function(r){var p=monthVal(r,apr,"pos"),c=monthVal(r,apr,"clicks");return p!=null&&p<=20&&c>0;}).length;
+  var weak=rows.filter(function(r){var p=monthVal(r,apr,"pos"),c=monthVal(r,apr,"clicks"),i=monthVal(r,apr,"imp");return i>0&&((p>20&&p<=50)||(!c&&p<=50));}).length;
+  var gap=rows.length-ranking-weak;
+  var novWithData=rows.filter(function(r){return monthVal(r,MONTHS[0],"imp")>0;}).length;
+  document.getElementById("kwTotal").textContent=fmt(rows.length);
+  document.getElementById("kwRanking").textContent=fmt(ranking);
+  document.getElementById("kwWeak").textContent=fmt(weak);
+  document.getElementById("kwGap").textContent=fmt(gap);
+  document.getElementById("kwTotalSub").textContent="Target keywords from Ahrefs list";
+  document.getElementById("kwRankingSub").textContent="Apr pos <= 20, clicks recorded";
+  document.getElementById("kwWeakSub").textContent="Low clicks or Apr pos 20-50";
+  document.getElementById("kwGapSub").textContent="Apr pos > 50 or no impressions";
+  document.getElementById("sourceMeta").textContent="Data period: Nov 2025 - Apr 2026";
+  document.getElementById("kwTableNote").textContent="Sorted by total clicks · Nov data available for "+novWithData+" of "+rows.length+" keywords";
+}
+function renderHistory(rows){
+  var tbody=document.getElementById("kwHistoryBody");
+  var sorted=rows.slice().sort(function(a,b){return totalClicks(b)-totalClicks(a)||totalImpressions(b)-totalImpressions(a);});
+  tbody.innerHTML=sorted.map(function(r,i){
+    var q=r.query||'',tag=clusterLabel(q);
+    var mar=monthVal(r,MONTHS[4],"pos"),apr=monthVal(r,MONTHS[5],"pos");
+    var delta=(mar!=null&&apr!=null)?apr-mar:null;
+    return '<tr class="'+(i>=10?'kw-hist-extra':'')+'">'+
+      '<td class="hn">'+(i+1)+'</td>'+
+      '<td class="hkw"><span class="ct ct-'+clusterClass(q)+'">'+tag+'</span>'+esc(q)+'</td>'+
+      MONTHS.map(function(m){return '<td class="'+m.cls+' m-first">'+fmt(monthVal(r,m,"imp"))+'</td><td class="'+m.cls+'">'+fmt(monthVal(r,m,"clicks"))+'</td><td class="'+m.cls+'">'+fmtPos(monthVal(r,m,"pos"))+'</td>';}).join('')+
+      '<td class="hdelta '+deltaClass(delta)+' m-delta">'+deltaText(delta)+'</td>'+
+    '</tr>';
+  }).join('');
+  var btn=document.getElementById("histToggle");
+  btn.style.display=rows.length>10?'inline-block':'none';
+  btn.textContent='See All '+rows.length+' Keywords';
+}
+function renderUniverse(rows){
+  var groups={};
+  rows.forEach(function(r){
+    var seed=r.matched_seed||"other keywords";
+    var clicks=num(r.clicks)||0,impressions=num(r.impressions)||0;
+    if(!groups[seed])groups[seed]={seed:seed,rows:[],clicks:0,impressions:0};
+    groups[seed].rows.push(r);
+    groups[seed].clicks+=clicks;
+    groups[seed].impressions+=impressions;
+  });
+  var cards=Object.keys(groups).map(function(k){return groups[k];}).sort(function(a,b){return b.rows.length-a.rows.length||b.clicks-a.clicks||b.impressions-a.impressions;}).slice(0,12);
+  var totalClicksAll=rows.reduce(function(sum,r){return sum+(num(r.clicks)||0);},0);
+  document.getElementById("universeTotals").innerHTML='<div style="font-size:22px;font-weight:800;font-family:\'Montserrat\',sans-serif;line-height:1;color:var(--ink)">'+fmt(rows.length)+'</div><div style="font-size:9px;color:var(--muted)">variant queries · '+fmt(totalClicksAll)+' clicks</div>';
+  document.getElementById("universeGrid").innerHTML=cards.map(function(c){
+    var top=c.rows.slice().sort(function(a,b){return (num(b.clicks)||0)-(num(a.clicks)||0)||(num(b.impressions)||0)-(num(a.impressions)||0);}).slice(0,3);
+    return '<div class="var-card">'+
+      '<div class="var-head"><span class="var-seed">'+esc(c.seed)+'</span><span class="var-badge">'+fmt(c.rows.length)+'</span></div>'+
+      '<div class="var-meta"><strong>'+fmt(c.clicks)+'</strong> clicks · '+fmt(c.impressions)+' impr</div>'+
+      '<div class="var-rows">'+top.map(function(r){return'<div class="var-row"><span class="var-qkw">'+esc(r.query)+'</span><span class="var-cl">'+fmt(num(r.clicks)||0)+'</span></div>';}).join('')+'</div>'+
+    '</div>';
+  }).join('');
+}
+function toggleKwRows(){
+  var rows=document.querySelectorAll(".kw-hist-extra"),btn=document.getElementById("histToggle");
+  if(!rows.length)return;
+  var hidden=getComputedStyle(rows[0]).display==="none";
+  rows.forEach(function(r){r.style.display=hidden?"table-row":"none";});
+  btn.textContent=hidden?"See Less":"See All "+kwRows.length+" Keywords";
+}
+async function initKeywords(){
+  var csv=await loadCSV(KEYWORDS_CSV);
+  var variants=await loadCSV(VARIANTS_CSV);
+  if(!csv){document.getElementById("kwHistoryBody").innerHTML='<tr><td colspan="21">Unable to load keyword history data.</td></tr>';return;}
+  kwRows=csv.rows;
+  renderKpis(kwRows);
+  renderHistory(kwRows);
+  if(variants&&variants.rows.length){
+    renderUniverse(variants.rows);
+  }else{
+    document.getElementById("universeGrid").innerHTML='<div class="var-card"><div class="var-meta">Unable to load keyword variant data.</div></div>';
+  }
+}
+window.addEventListener("load",initKeywords);
+</script>
+<div class="wrap">
+
+<div class="source-strip"><span>Source: Google Search Console keyword export</span><span id="sourceMeta">Loading data...</span></div>
+
+<div class="kw-kpi-row">
+  <div class="rpt-kpi" style="border-top:4px solid var(--accent)">
+    <div class="l">Keyword Clusters Tracked</div>
+    <div class="n" id="kwTotal">—</div>
+    <div class="kpi-sub" id="kwTotalSub"></div>
+  </div>
+  <div class="rpt-kpi" style="border-top:4px solid #16a34a">
+    <div class="l">Ranking</div>
+    <div class="n" id="kwRanking" style="color:#16a34a">—</div>
+    <div class="kpi-sub" id="kwRankingSub"></div>
+  </div>
+  <div class="rpt-kpi" style="border-top:4px solid #b45309">
+    <div class="l">Weak / Opportunity</div>
+    <div class="n" id="kwWeak" style="color:#b45309">—</div>
+    <div class="kpi-sub" id="kwWeakSub"></div>
+  </div>
+  <div class="rpt-kpi" style="border-top:4px solid #dc2626">
+    <div class="l">Coverage Gap</div>
+    <div class="n" id="kwGap" style="color:#dc2626">—</div>
+    <div class="kpi-sub" id="kwGapSub"></div>
+  </div>
+</div>
+
+<div class="kw-main">
+  <div class="kw-history-wrap">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+      <div class="kw-panel-title">Monthly Performance - Nov 2025 → Apr 2026</div>
+      <div class="kw-panel-note" id="kwTableNote">Loading monthly keyword data</div>
+    </div>
+    <table class="kw-hist-tbl">
+      <colgroup>
+        <col style="width:2%">
+        <col style="width:14%">
+        <col style="width:3.5%"><col style="width:3%"><col style="width:3%">
+        <col style="width:3.5%"><col style="width:3%"><col style="width:3%">
+        <col style="width:3.5%"><col style="width:3%"><col style="width:3%">
+        <col style="width:3.5%"><col style="width:3%"><col style="width:3%">
+        <col style="width:3.5%"><col style="width:3%"><col style="width:3%">
+        <col style="width:3.5%"><col style="width:3%"><col style="width:3%">
+        <col style="width:4%">
+      </colgroup>
+      <thead>
+        <tr class="kw-hist-month-row">
+          <th rowspan="2">#</th>
+          <th rowspan="2" style="text-align:left">Keyword</th>
+          <th colspan="3" class="ms0 ms-first">Nov 2025</th>
+          <th colspan="3" class="ms1 ms-first">Dec 2025</th>
+          <th colspan="3" class="ms2 ms-first">Jan 2026</th>
+          <th colspan="3" class="ms3 ms-first">Feb 2026</th>
+          <th colspan="3" class="ms4 ms-first">Mar 2026</th>
+          <th colspan="3" class="ms5 ms-first">Apr 2026</th>
+          <th rowspan="2" class="m-delta">Mar→Apr<br>Pos Δ</th>
+        </tr>
+        <tr>
+          <th class="ms0 ms-first">Impr.</th><th class="ms0">Cl.</th><th class="ms0">Pos.</th>
+          <th class="ms1 ms-first">Impr.</th><th class="ms1">Cl.</th><th class="ms1">Pos.</th>
+          <th class="ms2 ms-first">Impr.</th><th class="ms2">Cl.</th><th class="ms2">Pos.</th>
+          <th class="ms3 ms-first">Impr.</th><th class="ms3">Cl.</th><th class="ms3">Pos.</th>
+          <th class="ms4 ms-first">Impr.</th><th class="ms4">Cl.</th><th class="ms4">Pos.</th>
+          <th class="ms5 ms-first">Impr.</th><th class="ms5">Cl.</th><th class="ms5">Pos.</th>
+        </tr>
+      </thead>
+      <tbody id="kwHistoryBody">
+        <tr><td colspan="21">Loading data...</td></tr>
+      </tbody>
+    </table>
+    <button class="kw-see-more" id="histToggle" onclick="toggleKwRows()" style="display:none">See All Keywords</button>
+  </div>
+</div>
+
+<div class="kw-var-section">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <div>
+      <div class="kw-panel-title">Variant Universe</div>
+      <div class="kw-panel-note" style="margin-top:2px">Previous month query variants grouped by matched seed</div>
+    </div>
+    <div id="universeTotals" style="text-align:right">
+      <div style="font-size:22px;font-weight:800;font-family:'Montserrat',sans-serif;line-height:1;color:var(--ink)">—</div>
+      <div style="font-size:9px;color:var(--muted)">loading clusters</div>
+    </div>
+  </div>
+  <div class="var-grid-wrap"><div class="var-grid" id="universeGrid"></div></div>
+</div>
+
+</div><!-- /wrap -->
+</body>
+</html>
