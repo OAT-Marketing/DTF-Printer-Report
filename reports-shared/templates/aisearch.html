@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body>
+<report-shell page="aisearch" accent="#7a4eb8">
+  <section-heading number="04" title="AI Search Visibility" subtitle="ChatGPT · Perplexity · Gemini"></section-heading>
+
+  <h2 class="sec">Headline KPIs</h2>
+  <kpi-grid src="data/aisearch-kpis.csv" cols="3"></kpi-grid>
+
+  <h2 class="sec">Sessions by AI source</h2>
+  <csv-chart src="data/aisearch-sources.csv" type="bar" x="source" y="sessions,engaged_sessions"
+             title="AI traffic share" height="280"></csv-chart>
+
+  <h2 class="sec">Trend</h2>
+  <csv-chart src="data/aisearch-trend.csv" type="line" x="month" y="sessions"
+             title="AI sessions over time" height="260"></csv-chart>
+
+  <h2 class="sec">Top pages cited by AI</h2>
+  <csv-table src="data/aisearch-pages.csv"
+             cols="page,source,sessions"
+             labels="Page,AI source,Sessions"
+             sortable num-cols="sessions"></csv-table>
+</report-shell>
+<script src="../../reports-shared/components/report-shell.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body>
+<report-shell page="keywords" accent="#0a6e3e">
+  <section-heading number="05" title="Keyword Rankings" subtitle="Tracked terms"></section-heading>
+
+  <h2 class="sec">Headline KPIs</h2>
+  <kpi-grid src="data/keywords-kpis.csv" cols="4"></kpi-grid>
+
+  <h2 class="sec">Tracked keywords</h2>
+  <csv-table src="data/keywords.csv"
+             cols="keyword,volume,position,prev_position,change,url"
+             labels="Keyword,Volume,Position,Prev,Change,URL"
+             sortable paginate="30"
+             num-cols="volume,position,prev_position,change"></csv-table>
+</report-shell>
+<script src="../../reports-shared/components/report-shell.js"></script>
+</body>
+</html>

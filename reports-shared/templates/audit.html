@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+
+<report-shell page="audit" accent="#C0392B">
+  <section-heading number="06" title="On-Page Audit" subtitle="Issues & priorities"></section-heading>
+
+  <h2 class="sec">Headline KPIs</h2>
+  <kpi-grid src="data/audit-kpis.csv" cols="4"></kpi-grid>
+
+  <h2 class="sec">Issues breakdown</h2>
+  <csv-table
+    src="data/audit-issues.csv"
+    cols="category,issue,count,severity,fix"
+    labels="Category,Issue,Count,Priority,Recommended fix"
+    sortable
+    paginate="20"
+    badge-col="severity"
+    num-cols="count"></csv-table>
+</report-shell>
+
+<script src="../../reports-shared/components/report-shell.js"></script>
+</body>
+</html>

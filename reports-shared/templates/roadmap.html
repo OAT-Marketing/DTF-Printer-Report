@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body>
+<report-shell page="roadmap" accent="#F28C28">
+  <section-heading number="01" title="Strategy Roadmap" subtitle="Next 3 phases"></section-heading>
+
+  <h2 class="sec">Snapshot</h2>
+  <kpi-grid src="data/roadmap-kpis.csv" cols="4"></kpi-grid>
+
+  <h2 class="sec">Phased plan</h2>
+  <cards-grid src="data/roadmap-phases.csv" cols="3" variant="phase"></cards-grid>
+</report-shell>
+<script src="../../reports-shared/components/report-shell.js"></script>
+</body>
+</html>

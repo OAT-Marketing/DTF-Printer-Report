@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body>
+<report-shell page="ga4" accent="#2563eb">
+  <section-heading number="03" title="GA4 Analytics" subtitle="Audience & engagement"></section-heading>
+
+  <h2 class="sec">Headline KPIs</h2>
+  <kpi-grid src="data/ga4-kpis.csv" cols="4"></kpi-grid>
+
+  <h2 class="sec">Users & sessions over time</h2>
+  <csv-chart src="data/ga4-monthly.csv" type="line" x="month"
+             y="total_users,new_users,sessions,engaged_sessions"
+             title="Monthly trend" height="320"></csv-chart>
+
+  <h2 class="sec">Sessions by channel</h2>
+  <csv-table src="data/ga4-channels.csv"
+             cols="channel,active_users,new_users,sessions,engaged_sessions"
+             labels="Channel,Active users,New users,Sessions,Engaged sessions"
+             sortable
+             num-cols="active_users,new_users,sessions,engaged_sessions"></csv-table>
+</report-shell>
+<script src="../../reports-shared/components/report-shell.js"></script>
+</body>
+</html>

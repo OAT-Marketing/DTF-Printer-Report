@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body>
+<report-shell page="shopify" accent="#5E8E3E">
+  <section-heading number="10" title="Shopify Analytics" subtitle="Sessions, conversions, revenue"></section-heading>
+
+  <h2 class="sec">Headline KPIs</h2>
+  <kpi-grid src="data/shopify-kpis.csv" cols="4"></kpi-grid>
+
+  <h2 class="sec">Monthly trend</h2>
+  <csv-chart src="data/shopify-monthly.csv" type="line" x="month"
+             y="sessions,orders" title="Sessions vs orders" height="300"></csv-chart>
+
+  <h2 class="sec">Traffic by source</h2>
+  <csv-table src="data/shopify-traffic.csv"
+             cols="source,sessions,conversion_rate,orders,revenue"
+             labels="Source,Sessions,Conv. rate,Orders,Revenue"
+             sortable
+             num-cols="sessions,conversion_rate,orders,revenue"></csv-table>
+</report-shell>
+<script src="../../reports-shared/components/report-shell.js"></script>
+</body>
+</html>

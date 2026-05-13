@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body>
+<report-shell page="brightlocal" accent="#F28C28">
+  <section-heading number="08" title="Local SEO (BrightLocal)" subtitle="Rank, citations, GBP"></section-heading>
+
+  <h2 class="sec">Headline KPIs</h2>
+  <kpi-grid src="data/brightlocal-kpis.csv" cols="4"></kpi-grid>
+
+  <h2 class="sec">Local rank tracker</h2>
+  <csv-table src="data/rank-tracker.csv"
+             cols="keyword,location,position,prev_position,change"
+             labels="Keyword,Location,Position,Prev,Change"
+             sortable paginate="25"
+             num-cols="position,prev_position,change"></csv-table>
+
+  <h2 class="sec">Citations</h2>
+  <csv-table src="data/citations.csv"
+             cols="directory,status,nap_match,last_checked"
+             labels="Directory,Status,NAP match,Last checked"
+             sortable paginate="20" badge-col="status"></csv-table>
+
+  <h2 class="sec">Google Business Profile audit</h2>
+  <csv-table src="data/gbp-audit.csv"
+             cols="field,status,note"
+             labels="Field,Status,Note"
+             badge-col="status"></csv-table>
+</report-shell>
+<script src="../../reports-shared/components/report-shell.js"></script>
+</body>
+</html>

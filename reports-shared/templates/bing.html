@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body>
+<report-shell page="bing" accent="#0078d4">
+  <section-heading number="09" title="Bing Performance" subtitle="Bing Webmaster Tools"></section-heading>
+
+  <h2 class="sec">Headline KPIs</h2>
+  <kpi-grid src="data/bing-kpis.csv" cols="4"></kpi-grid>
+
+  <h2 class="sec">Trend</h2>
+  <csv-chart src="data/bing-trend.csv" type="line" x="month" y="clicks,impressions"
+             title="Clicks & impressions over time" height="300"></csv-chart>
+
+  <h2 class="sec">Top pages</h2>
+  <csv-table src="data/bing-pages.csv"
+             cols="page,clicks,impressions,ctr,position"
+             labels="Page,Clicks,Impressions,CTR,Position"
+             sortable paginate="20"
+             num-cols="clicks,impressions,ctr,position"></csv-table>
+
+  <h2 class="sec">Top queries</h2>
+  <csv-table src="data/bing-keywords.csv"
+             cols="keyword,clicks,impressions,ctr,position"
+             labels="Keyword,Clicks,Impressions,CTR,Position"
+             sortable paginate="20"
+             num-cols="clicks,impressions,ctr,position"></csv-table>
+</report-shell>
+<script src="../../reports-shared/components/report-shell.js"></script>
+</body>
+</html>

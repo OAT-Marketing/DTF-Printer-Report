@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body>
+<report-shell page="gsc" accent="#F28C28">
+  <section-heading number="02" title="Google Search Console" subtitle="Organic performance"></section-heading>
+
+  <h2 class="sec">Headline KPIs</h2>
+  <kpi-grid src="data/gsc-kpis.csv" cols="4"></kpi-grid>
+
+  <h2 class="sec">Trend</h2>
+  <csv-chart src="data/gsc-trend.csv" type="line" x="month" y="clicks,impressions"
+             title="Clicks & impressions over time" height="320"></csv-chart>
+
+  <h2 class="sec">Top pages</h2>
+  <csv-table src="data/gsc-pages.csv"
+             cols="page,clicks,impressions,ctr,position"
+             labels="Page,Clicks,Impressions,CTR,Position"
+             sortable paginate="25"
+             num-cols="clicks,impressions,ctr,position"></csv-table>
+</report-shell>
+<script src="../../reports-shared/components/report-shell.js"></script>
+</body>
+</html>

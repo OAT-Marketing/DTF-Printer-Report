@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body>
+<report-shell page="backlinks" accent="#274b6e">
+  <section-heading number="07" title="Backlinks" subtitle="Authority & link velocity"></section-heading>
+
+  <h2 class="sec">Headline KPIs</h2>
+  <kpi-grid src="data/backlinks-kpis.csv" cols="4"></kpi-grid>
+
+  <h2 class="sec">Recently created backlinks</h2>
+  <csv-table src="data/backlinks-new.csv"
+             cols="date,referring_url,target_url,dr,type,status"
+             labels="Date,Referring URL,Target,DR,Type,Status"
+             sortable paginate="25" badge-col="status"
+             num-cols="dr"></csv-table>
+
+  <h2 class="sec">Top referring domains</h2>
+  <csv-table src="data/refdomains.csv"
+             cols="domain,dr,domain_traffic,links,first_seen"
+             labels="Domain,DR,Traffic,Links,First seen"
+             sortable paginate="25"
+             num-cols="dr,domain_traffic,links"></csv-table>
+</report-shell>
+<script src="../../reports-shared/components/report-shell.js"></script>
+</body>
+</html>
